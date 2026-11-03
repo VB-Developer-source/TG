@@ -1,0 +1,1156 @@
+# SESSION 03 — BUILD THE REALISTIC MUMBAI SUBURBAN RAILWAY NETWORK
+
+Act as a senior Indian Railways infrastructure engineer, railway simulation architect, GIS developer, railway station designer, and senior Three.js game developer.
+
+Your task is to develop a highly realistic, station-specific 3D railway infrastructure system for a Mumbai Local Train Simulator.
+
+This is intended to represent the REAL Mumbai suburban railway network, not a fictional railway environment.
+
+The simulator must eventually recreate actual railway corridors, station sequences, station platforms, track arrangements, railway junctions, bridges, tunnels, overhead electrification, station buildings, and surrounding geography.
+
+The research information in this prompt has been supplied by the project owner.
+
+IMPORTANT:
+
+You are responsible for implementing the supplied railway information in the game.
+
+You are NOT responsible for independently researching or guessing missing railway facts.
+
+Do not invent station platform counts, track configurations, station connections, geographical features, or railway infrastructure.
+
+Where information is not supplied or verified, preserve it as unknown and make the corresponding geometry configurable.
+
+==================================================
+PART 01 — EXISTING PROJECT AND SYSTEM PROTECTION
+==================================================
+
+The project already contains:
+
+- Three.js rendering system.
+- JavaScript ES modules.
+- Vite development environment.
+- HTML and CSS interface.
+- Main menu.
+- Camera controls.
+- 3D environment.
+- Train creation system from Session 02.
+- Mumbai suburban EMU train models.
+- Train exterior.
+- Train interior and driver cabin.
+- Train lighting and audio systems.
+
+Before implementation:
+
+1. Inspect the complete existing project.
+2. Understand its architecture.
+3. Identify the existing train dimensions.
+4. Identify wheel and bogie positions.
+5. Identify the train's coordinate system.
+6. Identify camera and scene management.
+7. Identify existing asset loading.
+8. Identify existing lighting and world systems.
+9. Reuse existing modules wherever possible.
+
+STRICT RULES:
+
+- Never rebuild the entire project.
+- Never replace working systems unnecessarily.
+- Never remove existing train models.
+- Never break the main menu.
+- Never remove existing camera controls.
+- Never duplicate existing functionality.
+- Do not use placeholder code when actual implementation is required.
+- Preserve the existing project architecture.
+
+==================================================
+PART 02 — PROJECT RAILWAY NETWORK SCOPE
+==================================================
+
+Build these three major suburban corridors.
+
+A. CENTRAL RAILWAY
+
+Main corridor:
+CSMT → Kalyan
+
+Branch 1:
+Kalyan → Kasara
+
+Branch 2:
+Kalyan → Karjat
+
+Optional later extension:
+Karjat → Khopoli.
+
+B. WESTERN RAILWAY
+
+Main corridor:
+Churchgate → Virar.
+
+C. HARBOUR RAILWAY
+
+Main corridor:
+CSMT → Wadala Road.
+
+Branch 1:
+Wadala Road → Mahim → Western Railway connection.
+
+Branch 2:
+Wadala Road → Kurla → Vashi → Nerul → CBD Belapur → Panvel.
+
+The Harbour Line must be represented as a connected railway network, not an isolated straight track.
+
+IMPORTANT:
+
+The Trans-Harbour, Nerul–Uran, Vasai–Diva and other connecting railway corridors may be represented as future expansion modules. Do not silently mix them into the three primary playable corridors.
+
+==================================================
+PART 03 — SUPPLIED RAILWAY INFRASTRUCTURE RESEARCH
+==================================================
+
+Use the following researched information as the starting infrastructure specification.
+
+CENTRAL RAILWAY:
+
+CSMT–Kalyan:
+- Four running tracks in the documented configuration.
+- Two tracks form the local line.
+- Two tracks form the through line.
+- Through lines are shared by applicable suburban, passenger, express and freight traffic.
+- Do not automatically represent all four as four exclusively dedicated suburban lines.
+- Reproduce the actual track arrangement using the supplied network data.
+
+Kalyan:
+- Major junction.
+- Branch towards Kasara.
+- Branch towards Karjat.
+- Six passenger platforms according to supplied government/MRVC information.
+- Four pit lines according to supplied government information.
+
+Kalyan–Kasara:
+- Historically documented as a double-line section.
+- Third-line expansion is a separate infrastructure project.
+- Do not include the proposed or under-construction third line in the default present-day world unless confirmed commissioned.
+
+Kalyan–Karjat:
+- Historically documented as a double-line section.
+- Third and fourth line expansion projects must be represented separately from existing commissioned infrastructure.
+
+Karjat–Khopoli:
+- Optional extension module.
+- Use the appropriate single-line configuration where matching the documented existing arrangement.
+
+WESTERN RAILWAY:
+
+Churchgate–Borivali:
+- Four running lines in the documented network configuration.
+- Represent the actual slow/fast and through traffic arrangements.
+- Do not invent station-specific crossover arrangements.
+
+Borivali–Virar:
+- The historic RDSO document describes two lines.
+- Fifth and sixth line expansion has been sanctioned.
+- Use the current commissioned status provided in the project owner's updated infrastructure records.
+- Do not assume the additional lines are all commissioned simply because a project has been sanctioned.
+
+Virar:
+- Platform 3A and 4A widening and extension works have been reported completed.
+- New home platform 5A has been constructed.
+- These changes must be represented separately from the older station layout.
+- Platform 5A must not be confused with an assumption about the complete station platform count.
+
+HARBOUR RAILWAY:
+
+CSMT–Wadala:
+- Harbour corridor.
+- Connect the CSMT Harbour terminal arrangement to Wadala Road.
+
+Wadala Road:
+- Railway branching point.
+- One branch connects towards Mahim and the Western Railway.
+- The other branch continues towards Kurla and Panvel.
+
+Wadala–Mahim:
+- Double-line configuration in the documented historical network.
+- Connect correctly with the Western Railway at Mahim.
+
+Wadala–Kurla–Panvel:
+- Double-line configuration in the documented historical network.
+- Connect the route through the Navi Mumbai corridor.
+- Use actual station order and connections.
+
+Do not invent a junction or branch connection at an incorrect station.
+
+==================================================
+PART 04 — SUPPLIED VERIFIED STATION DATA
+==================================================
+
+Use these station-specific infrastructure records.
+
+STATION: KALYAN
+- Passenger platforms: 6.
+- Pit lines: 4.
+- Important junction towards Kasara and Karjat.
+- Station layout must support terminating and through services.
+- Use a station-specific layout rather than a generic six-platform template.
+
+STATION: VASAI ROAD
+- Passenger platforms: 6.
+- Pit lines: 3.
+- Stabling lines: 5.
+- Must be represented as a major station with additional railway facilities.
+
+STATION: PAREL
+- Passenger platforms: 6.
+- Pit lines: 5.
+- Stabling lines: 6.
+- Include its station-specific infrastructure and urban surroundings.
+
+STATION: PANVEL–KALAMBOLI AREA
+- Passenger platforms: 5, according to the supplied government infrastructure record.
+- Pit lines: 4.
+- Sick lines: 2.
+- Keep the Panvel station and Kalamboli railway facilities as separate geographical entities unless the supplied station plan specifically identifies shared infrastructure.
+
+STATION: LOKMANYA TILAK TERMINUS
+- Passenger platforms: 4.
+- Pit lines: 2.
+- This is a terminal facility, not an ordinary suburban through station.
+
+STATION: DOMBIVLI
+- Passenger platforms: 5, according to the supplied MRVC station improvement reference.
+
+DATA INTERPRETATION RULE:
+
+Passenger platforms, running tracks, pit lines, stabling lines, sick lines, loop lines and sidings are different railway infrastructure types.
+
+Never add them together and call the total passenger platform count.
+
+The station information above is a partial verified database, not a complete database of every station.
+
+For all other stations:
+- Do not invent passenger platform counts.
+- Do not invent track counts.
+- Do not assume identical platform arrangements.
+- Use null for unknown values.
+- Keep unknown layouts editable.
+- Mark provisional geometry clearly as provisional.
+
+==================================================
+PART 05 — INFRASTRUCTURE PROJECT STATUS
+==================================================
+
+The following railway capacity projects have been identified in supplied Ministry of Railways information.
+
+- CSMT–Kurla fifth and sixth lines.
+- Mumbai Central–Borivali sixth line.
+- Borivali–Virar fifth and sixth lines.
+- Virar–Dahanu Road third and fourth lines.
+- Kalyan–Badlapur third and fourth lines.
+- Kalyan–Asangaon fourth line.
+- Kalyan–Kasara third line.
+- Panvel–Karjat suburban corridor.
+- Airoli–Kalwa elevated corridor.
+- Goregaon–Borivali Harbour extension.
+- Naigaon–Juichandra double chord.
+- Nilaje–Kopar double chord.
+- Kalyan yard remodelling.
+
+These are project records, not proof that every project is commissioned.
+
+Every railway section must support these infrastructure states:
+
+1. EXISTING_COMMISSIONED
+2. UNDER_CONSTRUCTION
+3. SANCTIONED_NOT_STARTED
+4. PROPOSED
+5. HISTORICAL_REMOVED
+
+Default playable present-day mode:
+
+Only show commissioned infrastructure as operational.
+
+Provide an optional future-infrastructure visualization mode for planned and under-construction projects.
+
+Never represent an under-construction railway line as an operational passenger line.
+
+Keep project status, source date and effective date inside the data model.
+
+==================================================
+PART 06 — REALISTIC STATION SEQUENCE
+==================================================
+
+Create the railway database using the correct station order.
+
+The following are starting station-sequence references. Use the supplied official working timetable data and owner-provided station records to resolve any changes or special branch details.
+
+CENTRAL MAIN LINE:
+
+CSMT
+Masjid
+Sandhurst Road
+Byculla
+Chinchpokli
+Currey Road
+Parel
+Dadar
+Matunga
+Sion
+Kurla
+Vidyavihar
+Ghatkopar
+Vikhroli
+Kanjurmarg
+Bhandup
+Nahur
+Mulund
+Thane
+Kalwa
+Mumbra
+Diva Junction
+Kopar
+Dombivli
+Thakurli
+Kalyan
+
+KALYAN–KASARA:
+
+Kalyan
+Shahad
+Ambivli
+Titwala
+Khadavli
+Vasind
+Asangaon
+Atgaon
+Thansit
+Khardi
+Umbermali
+Kasara
+
+KALYAN–KARJAT:
+
+Kalyan
+Vithalwadi
+Ulhasnagar
+Ambernath
+Badlapur
+Vangani
+Shelu
+Neral
+Bhivpuri Road
+Karjat
+
+Optional Karjat–Khopoli extension:
+
+Karjat
+Palasdhari
+Kelavli
+Dolavli
+Lowjee
+Khopoli
+
+WESTERN LINE:
+
+Churchgate
+Marine Lines
+Charni Road
+Grant Road
+Mumbai Central
+Mahalaxmi
+Lower Parel
+Prabhadevi
+Dadar
+Matunga Road
+Mahim Junction
+Bandra
+Khar Road
+Santacruz
+Vile Parle
+Andheri
+Jogeshwari
+Goregaon
+Malad
+Kandivali
+Borivali
+Dahisar
+Mira Road
+Bhayandar
+Naigaon
+Vasai Road
+Nallasopara
+Virar
+
+The extended Western suburban network towards Dahanu Road must be a separate extension.
+
+HARBOUR LINE — CSMT TO PANVEL:
+
+CSMT
+Masjid
+Sandhurst Road
+Dockyard Road
+Reay Road
+Cotton Green
+Sewri
+Wadala Road
+GTB Nagar
+Chunabhatti
+Kurla
+Tilak Nagar
+Chembur
+Govandi
+Mankhurd
+Vashi
+Sanpada
+Juinagar
+Nerul
+Seawoods-Darave
+CBD Belapur
+Kharghar
+Mansarovar
+Khandeshwar
+Panvel
+
+HARBOUR WESTERN CONNECTION:
+
+Wadala Road
+King's Circle
+Mahim Junction
+
+Use the appropriate real connecting railway alignment and route sequence.
+
+IMPORTANT:
+
+This station list is a development starting point. Do not add stations from other corridors into the wrong route.
+
+Station aliases, official names, codes, route branches and interchange relationships must be stored in the data model.
+
+Do not use station sequence alone to calculate real geographic distances.
+
+==================================================
+PART 07 — GEOGRAPHICAL POSITIONING
+==================================================
+
+Create a consistent geographical coordinate system.
+
+Use station latitude and longitude values supplied in the project data.
+
+Requirements:
+
+- Correct relative station positions.
+- Correct station order.
+- Correct branch directions.
+- Correct route distances where verified.
+- Correct orientation of the railway network.
+- Consistent geographic-to-3D conversion.
+- Consistent elevation and ground height.
+
+Do not distribute stations at equal arbitrary distances.
+
+Do not generate a straight railway line between geographically separated stations if the real track alignment curves.
+
+Use a geographic projection suitable for the Mumbai metropolitan region.
+
+Use a local coordinate origin and convert geographical coordinates into Three.js world coordinates.
+
+The conversion system must support:
+- Latitude.
+- Longitude.
+- Elevation.
+- Route distance.
+- Track offset.
+- Track direction.
+- Station alignment.
+
+Preserve the ability to replace approximate coordinate data with improved GIS data later.
+
+==================================================
+PART 08 — RAILWAY TRACK GEOMETRY
+==================================================
+
+Create realistic Indian broad-gauge railway track infrastructure.
+
+Use 1,676 mm between the centres of the two rails.
+
+Create realistic rail geometry including:
+
+- Rail head.
+- Rail web.
+- Rail foot.
+- Rail fasteners.
+- Clips.
+- Base plates where appropriate.
+- Concrete sleepers.
+- Ballast.
+- Track formation.
+- Drainage.
+- Trackside cable conduits.
+
+Use realistic metallic materials for the rails.
+
+Use appropriate weathered concrete and ballast materials.
+
+Create:
+
+- Straight track sections.
+- Curved track sections.
+- Transition curves.
+- Parallel tracks.
+- Track crossovers.
+- Track switches.
+- Junctions.
+- Loop tracks.
+- Siding tracks.
+- Station tracks.
+- Terminal tracks.
+- Dead-end tracks.
+
+The track generator must support adjustable:
+
+- Gauge.
+- Curve radius.
+- Superelevation.
+- Sleeper spacing.
+- Rail length.
+- Track length.
+- Track offset.
+- Track elevation.
+
+Do not use simple rectangular bars as the final rail geometry.
+
+Do not allow sleepers to float above the ballast.
+
+Do not allow rails to overlap at section connections.
+
+==================================================
+PART 09 — RAILWAY TRACK NETWORK ENGINE
+==================================================
+
+Build a graph-based railway network.
+
+Every track segment must connect to other segments through explicit nodes.
+
+Create:
+
+- Track nodes.
+- Track edges.
+- Junction nodes.
+- Branch connections.
+- Station entry connections.
+- Station exit connections.
+- Terminal nodes.
+- Switch connections.
+
+Every segment must store:
+
+- Track ID.
+- Track type.
+- Start node.
+- End node.
+- Start position.
+- End position.
+- Start direction.
+- End direction.
+- Length.
+- Curve radius.
+- Track gauge.
+- Track elevation.
+- Infrastructure status.
+- Associated corridor.
+- Associated stations.
+- Connected track IDs.
+
+A train must eventually be able to follow this network without jumping between unrelated sections.
+
+Use splines or equivalent continuous path representations.
+
+Track junctions must have physically connected rails.
+
+Do not create junctions by simply placing two separate tracks on top of each other.
+
+==================================================
+PART 10 — STATION-SPECIFIC GENERATION
+==================================================
+
+Every station must be generated from its own database configuration.
+
+Do not create one generic station and duplicate it across the entire network.
+
+Each station must support:
+
+- Correct passenger platform count when verified.
+- Correct platform numbering when verified.
+- Correct track arrangement when verified.
+- Island platforms.
+- Side platforms.
+- Platform roofs.
+- Platform shelters.
+- Station buildings.
+- Entrance and exit structures.
+- Footbridges.
+- Staircases.
+- Subways.
+- Platform lighting.
+- Station nameboards.
+- Information boards.
+- Station furniture.
+- Railway electrical equipment.
+
+The station generator must read the station database.
+
+For example:
+
+If Kalyan is configured with six passenger platforms, generate six passenger platforms.
+
+If Vasai Road is configured with six passenger platforms, generate six passenger platforms.
+
+If Dombivli is configured with five passenger platforms, generate five passenger platforms.
+
+If another station has an unknown platform count, do not generate an invented number of platforms.
+
+Use a provisional geometry state that can be updated when the owner supplies the researched data.
+
+==================================================
+PART 11 — REALISTIC STATION ARCHITECTURE
+==================================================
+
+Create different station appearances based on station importance and reference material.
+
+Small suburban stations:
+- Basic station buildings.
+- Simple shelters.
+- Platform signage.
+- Benches.
+- Fans.
+- Lighting.
+- Footbridge access where applicable.
+
+Medium stations:
+- More detailed platform roofs.
+- Booking areas.
+- Multiple entry points.
+- Station offices.
+- Larger footbridges.
+- Multiple platform arrangements.
+
+Major stations and junctions:
+- Larger station structures.
+- Multiple platform zones.
+- Complex footbridges.
+- Additional railway facilities.
+- Separate terminating and through tracks.
+- Yard and maintenance facilities where verified.
+
+Add realistic Mumbai suburban details:
+
+- Marathi and English signage.
+- Platform number indicators.
+- Digital train information displays.
+- Public announcement speakers.
+- Platform clocks.
+- CCTV cameras.
+- Ticket counters.
+- Ticket barriers where applicable.
+- Benches.
+- Fans.
+- Electrical cabinets.
+- Dustbins.
+- Station lighting.
+- Railway signs.
+
+Do not copy the same station building across every location.
+
+==================================================
+PART 12 — SPECIAL RAILWAY INFRASTRUCTURE
+==================================================
+
+Create special structures only when supported by supplied geographical or railway data.
+
+Support:
+
+- Railway bridges.
+- Road overbridges.
+- Road underbridges.
+- Creek bridges.
+- Railway tunnels.
+- Cutting sections.
+- Embankments.
+- Elevated tracks.
+- Railway yards.
+- Stabling lines.
+- Pit lines.
+- Sick lines.
+- Terminal arrangements.
+- Level crossings where applicable.
+- Railway maintenance areas.
+
+Do not randomly add bridges, tunnels, or yards.
+
+Each special structure must have:
+- Unique ID.
+- Geographic location.
+- Associated track segment.
+- Structure type.
+- Height.
+- Length.
+- Width.
+- Infrastructure status.
+- Source or verification status.
+
+==================================================
+PART 13 — OVERHEAD ELECTRIFICATION
+==================================================
+
+Create realistic 25 kV AC overhead railway electrification.
+
+Include:
+
+- OHE masts.
+- Cantilever structures.
+- Contact wires.
+- Catenary wires.
+- Droppers.
+- Insulators.
+- Registration arms.
+- Supporting brackets.
+- Electrical equipment.
+- Portals for multiple tracks where appropriate.
+
+The overhead electrical system must follow the railway track geometry.
+
+It must adapt to:
+- Curved tracks.
+- Multiple tracks.
+- Station layouts.
+- Track junctions.
+- Bridges.
+- Elevated sections.
+
+Align the contact wire with the pantograph of the Session 02 train.
+
+Do not use one straight overhead wire for the entire railway network.
+
+Use reusable OHE components and appropriate spacing based on the supplied engineering configuration.
+
+==================================================
+PART 14 — TRAIN AND TRACK INTEGRATION
+==================================================
+
+Integrate the existing Session 02 train model.
+
+Requirements:
+
+- Correct track gauge.
+- Correct wheel-to-rail alignment.
+- Correct bogie position.
+- Correct coach height.
+- Correct train centreline.
+- Correct pantograph alignment.
+- Correct platform height relationship.
+- Correct train position alongside platforms.
+- Correct train length and stopping area.
+
+The train must sit naturally on the track.
+
+No floating wheels.
+
+No wheels buried inside the rails.
+
+No coach bodies intersecting the platform.
+
+No pantograph floating far away from the contact wire.
+
+Create a reusable train positioning and alignment system.
+
+Do not implement train-driving physics in this session.
+
+==================================================
+PART 15 — STATION STOPPING AND PLATFORM SYSTEM
+==================================================
+
+Prepare the infrastructure for future train operations.
+
+Every station must support:
+
+- Station entry point.
+- Station exit point.
+- Platform IDs.
+- Track IDs.
+- Platform side.
+- Stopping position.
+- Train direction.
+- Platform length.
+- Platform height.
+- Platform clearance.
+- Applicable train length.
+
+The system must eventually allow 12-car and 15-car EMU trains.
+
+Do not assume all platforms have the same length.
+
+Platform extension projects must be represented through station-specific data.
+
+Create a station stopping-position helper so future train physics can stop a train at the correct location.
+
+==================================================
+PART 16 — SURROUNDING MUMBAI ENVIRONMENT
+==================================================
+
+Create geographically coherent surroundings.
+
+Use the supplied coordinates and geographical references.
+
+Add realistic environmental features where appropriate:
+
+- Dense residential buildings.
+- Commercial buildings.
+- Industrial areas.
+- Roads.
+- Flyovers.
+- Pedestrian bridges.
+- Rivers.
+- Creeks.
+- Hills.
+- Vegetation.
+- Coastal environments.
+- Railway yards.
+- Urban markets.
+- Dense neighbourhoods.
+
+Different parts of Mumbai must have different surroundings.
+
+The environment around CSMT should not look identical to the environment around Kasara, Panvel, Virar or Karjat.
+
+Do not randomly distribute landmarks.
+
+Keep the railway infrastructure as the primary focus.
+
+==================================================
+PART 17 — DATA ARCHITECTURE
+==================================================
+
+Separate railway research data from Three.js geometry.
+
+Suggested project structure:
+
+src/railway/
+  RailwayNetwork.js
+  RailwayDatabase.js
+  RailwayGraph.js
+  Track.js
+  TrackBuilder.js
+  TrackGeometry.js
+  TrackPath.js
+  TrackNetwork.js
+  TrackJunction.js
+  TrackSwitch.js
+  TrackMaterials.js
+  TrackInfrastructure.js
+  OverheadElectrification.js
+  GeographicConverter.js
+  RailwayStatusManager.js
+
+src/railway/stations/
+  Station.js
+  StationDatabase.js
+  StationBuilder.js
+  StationConfig.js
+  Platform.js
+  PlatformBuilder.js
+  PlatformRoof.js
+  StationExterior.js
+  StationInterior.js
+  StationSignage.js
+  StationLighting.js
+  StationFurniture.js
+  Footbridge.js
+
+src/railway/data/
+  centralLine.js
+  kasaraBranch.js
+  karjatBranch.js
+  westernLine.js
+  harbourLine.js
+  stations.js
+  trackLayouts.js
+  infrastructureProjects.js
+  stationSources.js
+
+src/railway/environment/
+  RailwayBridge.js
+  RailwayTunnel.js
+  RailwayEmbankment.js
+  RailwayYard.js
+  RailwayDrainage.js
+  RailwayVegetation.js
+
+Adapt this structure to the existing project.
+
+Do not duplicate existing systems.
+
+==================================================
+PART 18 — STATION DATABASE FORMAT
+==================================================
+
+Each station must use a structured record similar to:
+
+{
+  stationId: "KYN",
+  stationName: "Kalyan Junction",
+  stationCode: "KYN",
+  corridor: ["CENTRAL"],
+  stationSequence: 26,
+
+  latitude: null,
+  longitude: null,
+
+  passengerPlatformCount: 6,
+  runningTrackCount: null,
+  pitLineCount: 4,
+  stablingLineCount: null,
+  sickLineCount: null,
+
+  platformArrangement: "VERIFIED_LAYOUT_REQUIRED",
+  trackLayout: "JUNCTION",
+
+  junctionConnections: [
+    "KASARA_BRANCH",
+    "KARJAT_BRANCH"
+  ],
+
+  infrastructureStatus: "EXISTING_COMMISSIONED",
+
+  verificationStatus: "PARTIALLY_VERIFIED",
+
+  sourceReferences: [],
+
+  effectiveDate: null
+}
+
+This is a schema example, not a complete station layout.
+
+Unknown values must remain null.
+
+Do not populate unknown fields with guesses.
+
+Each source record should include:
+
+- Source title.
+- Issuing organization.
+- Source URL.
+- Publication date.
+- Relevant page or section.
+- Attribute supported.
+- Confidence.
+- Verification status.
+
+==================================================
+PART 19 — RAILWAY NETWORK VISUALIZATION
+==================================================
+
+Create a developer inspection mode.
+
+Allow inspection of:
+
+- Entire railway network.
+- Central Railway.
+- Western Railway.
+- Harbour Railway.
+- Individual stations.
+- Individual track sections.
+- Junctions.
+- Track switches.
+- OHE structures.
+- Infrastructure projects.
+- Station platform layouts.
+
+Add developer overlays showing:
+
+- Station IDs.
+- Track IDs.
+- Track gauge.
+- Track count.
+- Platform count.
+- Junction connections.
+- Route direction.
+- Infrastructure status.
+- Verified versus provisional data.
+
+Create clear visual differences between:
+
+- Existing commissioned infrastructure.
+- Under-construction infrastructure.
+- Future infrastructure.
+- Provisional geometry.
+
+Do not show these development overlays in normal gameplay unless the user enables developer mode.
+
+==================================================
+PART 20 — PERFORMANCE AND WORLD STREAMING
+==================================================
+
+The Mumbai suburban network is large.
+
+Do not load every detailed station and building into memory at the same time.
+
+Implement:
+
+- Route-based world streaming.
+- Nearby station loading.
+- Distance-based LOD.
+- Instanced sleepers.
+- Instanced OHE poles.
+- Reusable station components.
+- Shared materials.
+- Texture atlases where appropriate.
+- Efficient geometry.
+- Resource disposal.
+- Frustum culling.
+- Simplified distant environments.
+
+Nearby stations should have high visual detail.
+
+Distant railway sections should use simplified geometry.
+
+Ensure the system can expand to the complete network without major performance problems.
+
+==================================================
+PART 21 — DEVELOPMENT ORDER
+==================================================
+
+Build the system in this order.
+
+PHASE 1 — DATA FOUNDATION
+
+Create:
+- Railway network database.
+- Station database.
+- Route graph.
+- Infrastructure status records.
+- Geographic conversion system.
+
+PHASE 2 — TRACK PROTOTYPE
+
+Build:
+- One straight track.
+- One curved track.
+- Realistic rails.
+- Sleepers.
+- Ballast.
+- Correct track gauge.
+
+PHASE 3 — STATION PROTOTYPE
+
+Build:
+- One station using verified data.
+- Correct passenger platforms.
+- Correct track alignment.
+- Platform roof.
+- Signage.
+- Footbridge where verified.
+
+PHASE 4 — JUNCTION PROTOTYPE
+
+Build:
+- Track branches.
+- Crossovers.
+- Switches.
+- Continuous rail connections.
+
+PHASE 5 — ELECTRIFICATION
+
+Build:
+- OHE masts.
+- Contact wires.
+- Catenary.
+- Pantograph alignment.
+
+PHASE 6 — TRAIN INTEGRATION
+
+Place the existing Session 02 train on the prototype railway track.
+
+Verify all wheels, bogies and pantograph alignment.
+
+PHASE 7 — NETWORK EXPANSION
+
+Expand the system corridor by corridor.
+
+Do not generate all stations in one unverified operation.
+
+PHASE 8 — STATION AND ENVIRONMENT DETAIL
+
+Add individual station buildings, platforms and surrounding environments.
+
+After each phase:
+- Run the browser.
+- Check the console.
+- Inspect the geometry.
+- Take screenshots.
+- Fix errors.
+- Preserve working features.
+
+==================================================
+PART 22 — ACCEPTANCE TESTS
+==================================================
+
+The implementation is accepted only if:
+
+1. Existing game foundation remains functional.
+2. Existing train model remains functional.
+3. Railway track gauge is correct.
+4. Rails and sleepers align properly.
+5. Track sections connect without gaps.
+6. Curved tracks look realistic.
+7. Junctions are physically connected.
+8. Station platform counts match supplied verified data.
+9. Unknown station data remains unknown.
+10. Kalyan junction supports Kasara and Karjat branches.
+11. Western track configuration changes according to section data.
+12. Harbour Line connects correctly at Wadala and Mahim.
+13. OHE follows the railway alignment.
+14. The train sits correctly on the rails.
+15. The train aligns with station platforms.
+16. Existing camera controls still work.
+17. Existing menu and settings still work.
+18. No critical console errors occur.
+19. Production build succeeds.
+20. The railway network can be expanded through data files without rewriting the geometry engine.
+
+==================================================
+PART 23 — FINAL DELIVERABLES
+==================================================
+
+Provide:
+
+1. Working railway network engine.
+2. Complete track geometry system.
+3. Station-specific generation system.
+4. Railway graph and junction system.
+5. Station database structure.
+6. Supplied verified station records.
+7. Infrastructure status system.
+8. OHE system.
+9. Train-track integration.
+10. Geographic positioning system.
+11. Developer inspection mode.
+12. Demonstration railway section.
+13. Browser screenshots.
+14. Testing report.
+15. List of incomplete or provisional information.
+16. Successful production build.
+
+FINAL RULES:
+
+Do not invent railway infrastructure.
+
+Do not change supplied research values.
+
+Do not confuse passenger platforms with railway tracks or maintenance lines.
+
+Do not represent planned railway projects as operational.
+
+Do not make every station identical.
+
+Accuracy, modular architecture, visual realism and performance are more important than generating a huge railway map quickly.
+
+Build actual working code inside the existing project, run it in the browser, and verify the implementation before declaring this session complete.

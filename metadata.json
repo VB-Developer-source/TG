@@ -1,0 +1,8 @@
+{
+  "name": "Mumbai Local Train Simulator 3D",
+  "description": "Experience the lifeline of Mumbai with a high-fidelity 3D railway simulation featuring realistic Mumbai EMU suburban trains, 25kV OHE catenary, procedural tracks, and a complete procedural Web Audio engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

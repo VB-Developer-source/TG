@@ -1,0 +1,166 @@
+/* Mumbai Local Train Simulator 3D - Loading Screen Styles */
+.loading-screen-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f172a 0%, #070b14 85%);
+  z-index: 1000;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+}
+
+.loading-screen-container.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.loading-content {
+  width: 90%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+/* Railway Emblem / Logo Badge */
+.loading-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: #fb923c;
+  text-transform: uppercase;
+}
+
+.loading-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.loading-title span {
+  color: var(--color-primary);
+  display: block;
+}
+
+.loading-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* Animated Track & Pantograph Graphic */
+.rail-anim-wrapper {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.rail-track-line {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.rail-ties-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(249, 115, 22, 0.5) 0px,
+    rgba(249, 115, 22, 0.5) 4px,
+    transparent 4px,
+    transparent 16px
+  );
+  animation: trackTiesRoll 1s linear infinite;
+}
+
+@keyframes trackTiesRoll {
+  0% { background-position-x: 0px; }
+  100% { background-position-x: -32px; }
+}
+
+.train-pulse-icon {
+  position: relative;
+  animation: trainSway 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes trainSway {
+  0% { transform: translateY(0px) rotate(-1deg); }
+  100% { transform: translateY(-2px) rotate(1deg); }
+}
+
+/* Progress Bar Container */
+.loading-progress-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.loading-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: 4px;
+  padding: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ea580c 0%, #f97316 60%, #fde047 100%);
+  border-radius: 2px;
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
+}
+
+.loading-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.loading-status-text {
+  color: #fb923c;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-percentage {
+  color: #ffffff;
+  font-weight: 700;
+}
