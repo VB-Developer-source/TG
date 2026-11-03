@@ -9,11 +9,13 @@ import {
   Camera,
   ChevronDown,
   ChevronUp,
+  Compass,
   DoorClosed,
   DoorOpen,
   Gauge,
   Lightbulb,
   Radio,
+  Route,
   Volume2,
   Zap,
 } from "lucide-react";
@@ -25,9 +27,23 @@ export type CameraModeOption = "free" | "cab" | "passenger" | "follow" | "railfa
 interface TrainDrivingDockProps {
   activeCameraMode: string;
   onCameraChange: (mode: CameraModeOption) => void;
+  onOpenRouteSelector?: () => void;
+  activeRouteLabel?: string;
+  stationTelemetry?: {
+    nextStationName: string;
+    distanceToStop: number;
+    platformSide: string;
+    isAligned: boolean;
+  } | null;
 }
 
-export function TrainDrivingDock({ activeCameraMode, onCameraChange }: TrainDrivingDockProps) {
+export function TrainDrivingDock({
+  activeCameraMode,
+  onCameraChange,
+  onOpenRouteSelector,
+  activeRouteLabel,
+  stationTelemetry,
+}: TrainDrivingDockProps) {
   const [pState, setPState] = useState<TrainPhysicsState>(trainPhysics.getState());
   const [collapsed, setCollapsed] = useState(false);
 
@@ -237,7 +253,7 @@ export function TrainDrivingDock({ activeCameraMode, onCameraChange }: TrainDriv
               variant={pState.doorsOpen ? "destructive" : "rail"}
               size="sm"
               onClick={handleDoors}
-              className={`h-8 px-2.5 text-xs font-mono gap-1 ${
+              className={`h-8 px-2.5 text-xs font-mono gap-1.5 ${
                 pState.doorsOpen
                   ? "border-amber-500/80 text-amber-300"
                   : "text-slate-300 hover:text-white"
@@ -246,6 +262,11 @@ export function TrainDrivingDock({ activeCameraMode, onCameraChange }: TrainDriv
             >
               {pState.doorsOpen ? <DoorOpen className="w-3.5 h-3.5" /> : <DoorClosed className="w-3.5 h-3.5" />}
               <span>{pState.doorsOpen ? "DOORS OPEN" : "DOORS"}</span>
+              {stationTelemetry && (
+                <span className="px-1 py-0.2 rounded text-[9px] font-bold bg-slate-800 text-cyan-300 border border-slate-700">
+                  {stationTelemetry.platformSide}
+                </span>
+              )}
               <span className="text-[10px] text-slate-500 hidden sm:inline">D</span>
             </Button>
 
@@ -259,6 +280,19 @@ export function TrainDrivingDock({ activeCameraMode, onCameraChange }: TrainDriv
               <Lightbulb className="w-3.5 h-3.5" />
               <span className="text-[10px] text-slate-500 hidden sm:inline">L</span>
             </Button>
+
+            {onOpenRouteSelector && (
+              <Button
+                variant="rail"
+                size="sm"
+                onClick={onOpenRouteSelector}
+                className="h-8 px-2.5 text-xs font-mono gap-1 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-600/60 text-amber-300"
+                title="Select Railway Corridor & Route"
+              >
+                <Route className="w-3.5 h-3.5" />
+                <span>ROUTE</span>
+              </Button>
+            )}
 
             <Button
               variant="default"

@@ -6,6 +6,8 @@
 import * as THREE from "three";
 import { COACH_LENGTH, BOGIE_OFFSET } from "./TrainConfig";
 import { RAIL_TOP_Y } from "../world/layout";
+import type { PlayableRoute, StationWaypoint, BlockSignal, SignalAspect } from "../railway/RailwayNetworkModels";
+import { ROUTE_CENTRAL_LOCAL_PLAYABLE } from "../railway/RouteDatabase";
 
 export interface TrackSample {
   position: THREE.Vector3;
@@ -24,52 +26,68 @@ export interface CoachPose {
   rearBogieQuat: THREE.Quaternion;
 }
 
+export type StationApproachStatus =
+  | "CRUISING"
+  | "APPROACHING"
+  | "BRAKING_ZONE"
+  | "ALIGNED"
+  | "OVERSHOT";
+
+export interface StationApproachTelemetry {
+  station: StationWaypoint;
+  distanceToStop: number;      // In metres (positive = approaching, negative = overshot)
+  status: StationApproachStatus;
+  isAligned: boolean;          // Within station stopping tolerance window (+/- 5.0m)
+  recommendedSpeedKmh: number;
+  correctPlatformSide: "LEFT" | "RIGHT" | "BOTH";
+}
+
 /**
  * Continuous track path system representing Mumbai suburban railway alignments.
- * Supports distance-based parameterization, smooth Catmull-Rom / Bezier transitions,
- * and stable multi-car train articulation without coach separation or track penetration.
+ * Supports distance-based parameterization, smooth Catmull-Rom transitions,
+ * connected route switching, multi-aspect block signals, and station stopping telemetry.
  */
 export class TrackPath {
+  private activeRoute: PlayableRoute;
   readonly curve: THREE.CurvePath<THREE.Vector3>;
-  readonly totalLength: number;
-  private readonly divisions = 800;
-  private readonly arcLengths: number[] = [];
+  totalLength: number;
 
-  constructor(points?: THREE.Vector3[]) {
+  constructor(route: PlayableRoute = ROUTE_CENTRAL_LOCAL_PLAYABLE) {
+    this.activeRoute = route;
     this.curve = new THREE.CurvePath<THREE.Vector3>();
 
-    // Default: Mumbai suburban corridor passing through Dadar platform 2/3 (trackX = 6.0)
-    // Runs from South (Parel approach) through Dadar Station into North (Matunga / Sion corridor)
-    const defaultControlPoints = points ?? [
-      new THREE.Vector3(4.2, RAIL_TOP_Y, -500),   // South approach from Parel
-      new THREE.Vector3(5.1, RAIL_TOP_Y, -350),   // Transition into platform alignment
-      new THREE.Vector3(6.0, RAIL_TOP_Y, -200),   // Dadar South Platform entry
-      new THREE.Vector3(6.0, RAIL_TOP_Y, -100),   // Platform 2/3 Island section
-      new THREE.Vector3(6.0, RAIL_TOP_Y, 0),      // Station center (FOB alignment)
-      new THREE.Vector3(6.0, RAIL_TOP_Y, 120),    // Platform North exit
-      new THREE.Vector3(6.0, RAIL_TOP_Y, 250),    // Matunga South signal gantries
-      new THREE.Vector3(6.4, RAIL_TOP_Y, 400),    // Gentle suburban curve North-East
-      new THREE.Vector3(7.8, RAIL_TOP_Y, 600),    // Mainline corridor toward Sion
-      new THREE.Vector3(9.5, RAIL_TOP_Y, 850),    // Distant horizon curve
-    ];
-
-    const spline = new THREE.CatmullRomCurve3(defaultControlPoints, false, "centripetal", 0.5);
+    const spline = new THREE.CatmullRomCurve3(route.curvePoints, false, "centripetal", 0.5);
     this.curve.add(spline);
     this.totalLength = this.curve.getLength();
   }
 
   /**
+   * Set active playable route, rebuilding the continuous track curve.
+   */
+  public setRoute(route: PlayableRoute): void {
+    this.activeRoute = route;
+    this.curve.curves = [];
+    const spline = new THREE.CatmullRomCurve3(route.curvePoints, false, "centripetal", 0.5);
+    this.curve.add(spline);
+    this.totalLength = this.curve.getLength();
+  }
+
+  public getActiveRoute(): PlayableRoute {
+    return this.activeRoute;
+  }
+
+  /**
    * Sample track state at a continuous arc distance (in metres) along the railway corridor.
+   * Guarantees double-precision right-handed orthonormal coordinate basis.
    */
   public sampleAtDistance(distanceM: number): TrackSample {
-    // Clamp to path boundaries or loop seamlessly
     const clampedDist = Math.max(0, Math.min(this.totalLength, distanceM));
     const u = this.totalLength > 0 ? clampedDist / this.totalLength : 0;
 
     const position = this.curve.getPoint(u);
     const tangent = this.curve.getTangent(u).normalize();
 
-    // Indian Railways standard upright normal (no excessive tilt on straight track)
+    // Standard Indian Railways upright normal (Right-handed basis: R x N = T)
     const up = new THREE.Vector3(0, 1, 0);
     const right = new THREE.Vector3().crossVectors(up, tangent).normalize();
     const correctedUp = new THREE.Vector3().crossVectors(tangent, right).normalize();
@@ -91,23 +109,20 @@ export class TrackPath {
   /**
    * Calculates the exact rigid body pose of an EMU coach and its two supporting bogies
    * at a specific track distance, preserving authentic Broad Gauge wheelset alignment.
-   *
-   * @param coachCenterDistance - Distance along track path to the coach center
    */
   public getCoachPose(coachCenterDistance: number): CoachPose {
-    // 1. Sample Front Bogie and Rear Bogie positions along the actual rail curve
     const frontBogieDist = coachCenterDistance + BOGIE_OFFSET;
     const rearBogieDist = coachCenterDistance - BOGIE_OFFSET;
 
     const frontSample = this.sampleAtDistance(frontBogieDist);
     const rearSample = this.sampleAtDistance(rearBogieDist);
 
-    // 2. Coach body position is the exact midpoint between the two bogie pivot centers
+    // Coach body position is the exact midpoint between the two bogie pivot centers
     const coachPos = new THREE.Vector3()
       .addVectors(frontSample.position, rearSample.position)
       .multiplyScalar(0.5);
 
-    // 3. Coach body orientation points directly from rear bogie to front bogie
+    // Coach body orientation points directly from rear bogie to front bogie
     const coachHeading = new THREE.Vector3()
       .subVectors(frontSample.position, rearSample.position)
       .normalize();
@@ -119,7 +134,7 @@ export class TrackPath {
     const coachRotMatrix = new THREE.Matrix4().makeBasis(coachRight, correctedUp, coachHeading);
     const coachQuat = new THREE.Quaternion().setFromRotationMatrix(coachRotMatrix);
 
-    // 4. Front & Rear bogies align with their local track tangents (Right-handed orthonormal frame)
+    // Bogies align with their local track tangents (Right-handed orthonormal frame)
     const frontRight = new THREE.Vector3().crossVectors(coachUp, frontSample.tangent).normalize();
     const correctedFrontUp = new THREE.Vector3().crossVectors(frontSample.tangent, frontRight).normalize();
     const frontMat = new THREE.Matrix4().makeBasis(frontRight, correctedFrontUp, frontSample.tangent);
@@ -141,12 +156,146 @@ export class TrackPath {
   }
 
   /**
-   * Computes the initial head distance so that the train stops at Dadar Station.
+   * Computes the initial spawn/stop distance for a station (defaults to Dadar Station).
    */
-  public getStationStopDistance(): number {
-    // Center of Dadar platform is at Z = 0 on path (approx 500m into path)
-    return 520;
+  public getStationStopDistance(stationCode: string = "DDR"): number {
+    const found = this.activeRoute.stations.find((s) => s.stationCode === stationCode);
+    if (found) return found.stopDistanceM;
+    // Fallback: Dadar platform center
+    return 920;
+  }
+
+  /**
+   * Evaluates the upcoming station and stopping telemetry for the driver HUD.
+   */
+  public getUpcomingStation(trainDist: number, forward: boolean = true): StationApproachTelemetry | null {
+    const stations = this.activeRoute.stations;
+    if (!stations.length) return null;
+
+    if (forward) {
+      // Find the closest station ahead or currently stopped at
+      for (let i = 0; i < stations.length; i++) {
+        const st = stations[i];
+        const distToStop = st.stopDistanceM - trainDist;
+        // If we are within 25m past the stop point or ahead of it
+        if (distToStop >= -30) {
+          const isAligned = Math.abs(distToStop) <= st.stoppingToleranceM;
+          let status: StationApproachStatus = "CRUISING";
+          let recommendedSpeedKmh = 105;
+
+          if (isAligned) {
+            status = "ALIGNED";
+            recommendedSpeedKmh = 0;
+          } else if (distToStop < -st.stoppingToleranceM) {
+            status = "OVERSHOT";
+            recommendedSpeedKmh = 0;
+          } else if (distToStop <= 100) {
+            status = "BRAKING_ZONE";
+            recommendedSpeedKmh = 20;
+          } else if (distToStop <= 450) {
+            status = "APPROACHING";
+            recommendedSpeedKmh = 45;
+          }
+
+          return {
+            station: st,
+            distanceToStop: distToStop,
+            status,
+            isAligned,
+            recommendedSpeedKmh,
+            correctPlatformSide: st.platformSide,
+          };
+        }
+      }
+      // Passed last station
+      const last = stations[stations.length - 1];
+      return {
+        station: last,
+        distanceToStop: last.stopDistanceM - trainDist,
+        status: "OVERSHOT",
+        isAligned: false,
+        recommendedSpeedKmh: 0,
+        correctPlatformSide: last.platformSide,
+      };
+    } else {
+      // Reverse travel (Southbound toward Parel / CSMT)
+      for (let i = stations.length - 1; i >= 0; i--) {
+        const st = stations[i];
+        const distToStop = trainDist - st.stopDistanceM;
+        if (distToStop >= -30) {
+          const isAligned = Math.abs(distToStop) <= st.stoppingToleranceM;
+          return {
+            station: st,
+            distanceToStop: distToStop,
+            status: isAligned ? "ALIGNED" : distToStop <= 100 ? "BRAKING_ZONE" : "APPROACHING",
+            isAligned,
+            recommendedSpeedKmh: isAligned ? 0 : 45,
+            correctPlatformSide: st.platformSide,
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Retrieves the nearest upcoming Automatic Block Signal ahead of the train.
+   */
+  public getSignalAhead(trainDist: number, forward: boolean = true): { signal: BlockSignal; distanceToSignal: number } | null {
+    const signals = this.activeRoute.signals;
+    if (!signals.length) return null;
+
+    if (forward) {
+      for (const sig of signals) {
+        if (sig.direction === "DOWN" && sig.distanceM >= trainDist) {
+          return { signal: sig, distanceToSignal: sig.distanceM - trainDist };
+        }
+      }
+    } else {
+      for (let i = signals.length - 1; i >= 0; i--) {
+        const sig = signals[i];
+        if (sig.direction === "UP" && sig.distanceM <= trainDist) {
+          return { signal: sig, distanceToSignal: trainDist - sig.distanceM };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Updates real-time block signal aspects based on train occupancy along the route.
+   */
+  public updateSignalAspects(trainLeadDist: number, trainTailDist: number): void {
+    const minZ = Math.min(trainLeadDist, trainTailDist);
+    const maxZ = Math.max(trainLeadDist, trainTailDist);
+
+    for (const sig of this.activeRoute.signals) {
+      // If the train is inside the block section protected by this signal:
+      if (maxZ >= sig.distanceM && minZ <= sig.protectedBlockEndM) {
+        sig.aspect = "RED"; // Danger - Block Occupied
+      } else if (sig.distanceM > maxZ && sig.distanceM - maxZ < 500) {
+        sig.aspect = "YELLOW"; // Caution
+      } else if (sig.distanceM > maxZ && sig.distanceM - maxZ < 1000) {
+        sig.aspect = "DOUBLE_YELLOW"; // Attention
+      } else {
+        sig.aspect = "GREEN"; // Clear / Proceed
+      }
+    }
+  }
+
+  /**
+   * Gets active speed restriction at train position (MPS or PSR).
+   */
+  public getSpeedLimitAt(distanceM: number): number {
+    for (const psr of this.activeRoute.speedRestrictions) {
+      if (distanceM >= psr.startM && distanceM <= psr.endM) {
+        return psr.maxSpeedKmh;
+      }
+    }
+    return 105; // Standard broad-gauge suburban EMU MPS
   }
 }
 
-export const defaultTrackPath = new TrackPath();
+export const defaultTrackPath = new TrackPath(ROUTE_CENTRAL_LOCAL_PLAYABLE);

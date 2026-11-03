@@ -15,6 +15,7 @@ import type { GameContext } from "../core/Game";
 import type { GameScene } from "./SceneManager";
 import { trainPhysics } from "../train/TrainPhysics";
 import { defaultTrackPath } from "../train/TrackPath";
+import { SignalSystem3D } from "../world/signal";
 
 export type ActiveCameraModeId = "free" | "cab" | "passenger" | "follow" | "railfan" | "drone";
 
@@ -35,11 +36,28 @@ export class ExploreScene implements GameScene {
   private followCamera: FollowCameraMode | null = null;
   private railfanCamera: RailfanCameraMode | null = null;
   private droneCamera: DroneCameraMode | null = null;
+  private signalSystem: SignalSystem3D | null = null;
 
   private cameraModes: ActiveCameraModeId[] = ["free", "cab", "passenger", "follow", "railfan", "drone"];
   private currentModeIndex = 0;
 
   constructor(private readonly ctx: GameContext) {}
+
+  private onRouteSelect = () => {
+    if (this.signalSystem) {
+      this.ctx.world.scene.remove(this.signalSystem.group);
+      this.signalSystem.dispose();
+      this.signalSystem = new SignalSystem3D(defaultTrackPath);
+      this.ctx.world.scene.add(this.signalSystem.group);
+    }
+  };
+
+  private onStationJump = (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    if (detail?.targetDist !== undefined) {
+      trainPhysics.setDistance(detail.targetDist - defaultTrackPath.getStationStopDistance());
+    }
+  };
 
   private onDoors = (e: Event) => {
     const rake = this.ctx.world.scene.getObjectByName("mumbai-emu-rake");
@@ -211,6 +229,10 @@ export class ExploreScene implements GameScene {
     });
     this.ctx.cameras.register(this.droneCamera);
 
+    // 7. 3D Multi-Aspect Colour Light Signalling (MACLS) System
+    this.signalSystem = new SignalSystem3D(defaultTrackPath);
+    this.ctx.world.scene.add(this.signalSystem.group);
+
     // Event listeners
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("mls:train:doors", this.onDoors);
@@ -221,6 +243,8 @@ export class ExploreScene implements GameScene {
     window.addEventListener("mls:train:emergency", this.onEmergencyBrake);
     window.addEventListener("mls:train:horn", this.onHorn);
     window.addEventListener("mls:train:cameramode", this.onCameraModeChange);
+    window.addEventListener("mls:route:select", this.onRouteSelect);
+    window.addEventListener("mls:station:jump", this.onStationJump);
   }
 
   enter(): void {
@@ -257,13 +281,18 @@ export class ExploreScene implements GameScene {
     trainPhysics.update(dt);
     const pState = trainPhysics.getState();
 
-    // 2. Update 3D train position, wheelsets, and doors
+    // 2. Update real-time Automatic Block Signals along route
+    const trainDist = defaultTrackPath.getStationStopDistance() + pState.distance;
+    defaultTrackPath.updateSignalAspects(trainDist + 124, trainDist - 124);
+    this.signalSystem?.updateAspects();
+
+    // 3. Update 3D train position, coach articulation, and bogies
     const rake = this.ctx.world.scene.getObjectByName("mumbai-emu-rake");
     if (rake?.userData?.update) {
       rake.userData.update(dt, pState.speed, pState.distance, defaultTrackPath);
     }
 
-    // 3. Update authentic traction and wheel rolling audio
+    // 4. Update authentic traction and wheel rolling audio
     this.ctx.audio.updateTrainSound(pState.speedKmh, pState.motorLoad);
   }
 
@@ -281,6 +310,14 @@ export class ExploreScene implements GameScene {
     window.removeEventListener("mls:train:emergency", this.onEmergencyBrake);
     window.removeEventListener("mls:train:horn", this.onHorn);
     window.removeEventListener("mls:train:cameramode", this.onCameraModeChange);
+    window.removeEventListener("mls:route:select", this.onRouteSelect);
+    window.removeEventListener("mls:station:jump", this.onStationJump);
+
+    if (this.signalSystem) {
+      this.ctx.world.scene.remove(this.signalSystem.group);
+      this.signalSystem.dispose();
+      this.signalSystem = null;
+    }
 
     this.freeCamera = null;
     this.cabCamera = null;

@@ -295,6 +295,12 @@ export class TrainPhysics {
     this.notify();
   }
 
+  /** Set or reset distance travelled along track spline (e.g. on station navigation or route alignment) */
+  public setDistance(distanceM: number): void {
+    this.state.distance = distanceM;
+    this.notify();
+  }
+
   // ================= SIMULATION INTEGRATION STEP ================= //
 
   /**
