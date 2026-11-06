@@ -57,6 +57,10 @@ export class World {
     this.scene.add(this.dynamicStationRoot);
   }
 
+  public getMaterials(): WorldMaterials | null {
+    return this.materials;
+  }
+
   createLoadTasks(textureOptions: TextureTaskOptions): LoadTask[] {
     return [
       ...createTextureTasks(this.assets, textureOptions),

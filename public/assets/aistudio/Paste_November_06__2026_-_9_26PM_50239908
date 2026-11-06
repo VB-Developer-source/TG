@@ -1,0 +1,1169 @@
+# MUMBAI LOCAL TRAIN SIMULATOR
+# MASTER ENGINEERING PROMPT — COMPLETE NETWORK CONNECTIVITY, 3D WORLD, BUG FIXES & FULL PLAYABILITY
+
+## 1. YOUR ROLE
+
+Act as a world-class team consisting of:
+
+- Principal Game Developer.
+- Senior Railway Simulation Engineer.
+- Senior Three.js and TypeScript Architect.
+- Railway Track Geometry Engineer.
+- Procedural World Generation Engineer.
+- Mumbai Railway Infrastructure Specialist.
+- 3D Environment Artist.
+- Train Physics Engineer.
+- AI Traffic and Passenger Simulation Engineer.
+- Performance Optimization Engineer.
+- Senior QA and Automated Testing Engineer.
+
+You are responsible for completing the existing Mumbai Local Train Simulator into a geographically coherent, detailed, continuous and fully playable 3D Mumbai suburban railway simulation.
+
+Think and work like a senior game development studio.
+
+Do not provide superficial fixes.
+
+Inspect the existing source code, understand the complete architecture, identify root causes, implement corrections, test the actual browser application and deliver a working result.
+
+---
+
+# 2. PROJECT CONTEXT
+
+The project has already undergone multiple development phases.
+
+The existing implementation reports:
+
+- 119 railway stations.
+- 11 corridor and branch route definitions.
+- Central Railway.
+- Western Railway.
+- Harbour Railway.
+- Trans-Harbour.
+- Kasara branch.
+- Karjat branch.
+- Khopoli branch.
+- Harbour-Western connection.
+- Railway network graph.
+- Continuous track spline systems.
+- Station generation systems.
+- Procedural Mumbai buildings.
+- World streaming.
+- Railway signalling.
+- Railway yards.
+- Procedural passengers.
+- A 12-coach Broad Gauge EMU.
+- 24 independently articulated bogies.
+- Train physics.
+- Audio synthesis.
+- Six camera modes.
+- Driving HUD and controls.
+
+These are reported capabilities, not automatically verified facts.
+
+Use the existing project as the foundation. Inspect what genuinely works and repair what is incomplete.
+
+## MOST IMPORTANT CURRENT PROBLEM
+
+The latest browser screenshots demonstrate that the railway world is still incomplete.
+
+Visible problems include:
+
+1. Railway tracks appear to terminate after a short distance.
+2. The distant world is mostly empty.
+3. The ground has a repetitive checkerboard appearance.
+4. Buildings look repetitive and disconnected from the railway geography.
+5. The station environment is incomplete.
+6. Continuous track geometry is not visually demonstrated.
+7. The complete railway network is not demonstrated through actual train travel.
+8. Only some locations have convincing physical environments.
+9. World streaming may not correctly generate upcoming stations and railway sections.
+
+Fix these problems throughout the project.
+
+Do not simply improve one screenshot or one station.
+
+The final objective is the complete Mumbai suburban railway world.
+
+---
+
+# 3. NON-NEGOTIABLE FINAL OBJECTIVE
+
+Build ONE continuous, geographically coherent and physically connected 3D railway world.
+
+Every operational station must be connected to the correct railway corridor.
+
+Every operational railway section must have actual continuous 3D track geometry.
+
+Every station must have physical environment geometry.
+
+Every junction must support valid railway movement.
+
+The existing 12-coach train must be able to travel between stations using real physics.
+
+The player must be able to travel across Central, Western and Harbour networks and their operational branches.
+
+The environment must generate naturally around the train.
+
+There must be no artificial track endings, missing station chunks, disconnected railway sections, accidental track connections or teleportation disguised as train travel.
+
+## Three levels of completion
+
+NETWORK CONNECTIVITY:
+Stations and track sections are connected in the railway data model.
+
+PHYSICAL CONNECTIVITY:
+Actual 3D track geometry connects the stations and junctions.
+
+PLAYABLE CONNECTIVITY:
+The train can physically travel through the track geometry from origin to destination.
+
+All three levels are mandatory.
+
+---
+
+# 4. FIRST TASK — FULL PROJECT INSPECTION
+
+Before editing, inspect the entire active project.
+
+Inspect:
+
+- package.json
+- tsconfig.json
+- Vite configuration.
+- Main application entry.
+- ExploreScene.ts.
+- TrainPhysics.ts.
+- TrainBuilder.ts.
+- TrackPath.ts.
+- RailwayNetworkGraph.ts.
+- RailwayPathResolver.ts.
+- RouteDatabase.ts.
+- StationBuilder.ts.
+- PlatformBuilder.ts.
+- StationSignage.ts.
+- FootbridgeBuilder.ts.
+- WorldStreamingManager.ts.
+- MumbaiWorld.ts.
+- StationCrowdManager.ts.
+- SignalSystem3D.ts.
+- RailwayYardBuilder.ts.
+- All railway data files.
+- All environment generation files.
+- All camera, audio and HUD systems.
+- All automated verification scripts.
+
+Identify:
+
+- Existing working systems.
+- Incomplete systems.
+- Broken systems.
+- Duplicate implementations.
+- Incorrect coordinate systems.
+- Incorrect station positioning.
+- Missing track sections.
+- Missing route geometry.
+- Missing environment generation.
+- Incorrect streaming.
+- Performance problems.
+- Runtime errors.
+- Visual defects.
+- Existing regressions.
+
+Create an internal implementation plan and then execute it.
+
+Do not stop after producing an audit report.
+
+---
+
+# 5. COMPLETE MUMBAI RAILWAY NETWORK
+
+Use existing railway data as the foundation.
+
+Verify all station records, route definitions, branch connections and operational status.
+
+## A. CENTRAL RAILWAY
+
+Complete the operational network:
+
+CSMT – Byculla – Parel – Dadar – Matunga – Sion – Kurla – Ghatkopar – Thane – Kalyan.
+
+Include the correct intermediate stations.
+
+Complete branches:
+
+Kalyan – Kasara.
+
+Kalyan – Karjat.
+
+Karjat – Khopoli.
+
+Preserve the actual track purposes:
+- Local slow.
+- Fast.
+- Through lines.
+- Additional operational lines.
+- Junctions.
+- Yard connections.
+- Branches.
+
+Do not simplify the entire corridor into one railway spline.
+
+## B. WESTERN RAILWAY
+
+Complete:
+
+Churchgate – Marine Lines – Charni Road – Grant Road – Mumbai Central – Mahalaxmi – Lower Parel – Prabhadevi – Dadar – Matunga Road – Mahim – Bandra – Andheri – Borivali – Virar – Dahanu Road.
+
+Include all operational intermediate stations.
+
+Preserve the actual track configuration and valid connections.
+
+## C. HARBOUR RAILWAY
+
+Complete:
+
+CSMT – Masjid – Sandhurst Road – Dockyard Road – Reay Road – Cotton Green – Sewri – Wadala Road.
+
+Complete the operational connection:
+
+Wadala Road – King's Circle – Mahim.
+
+Complete:
+
+Wadala Road – GTB Nagar – Chunabhatti – Kurla – Vashi – Nerul – Belapur – Panvel.
+
+Include all missing intermediate stations based on verified network data.
+
+## D. TRANS-HARBOUR
+
+Complete the operational Thane – Vashi – Nerul – Panvel connections and their correct intermediate stations and junctions.
+
+## E. BRANCH AND CONNECTION VALIDATION
+
+Ensure:
+- Correct station membership.
+- Correct junction connections.
+- Correct track direction.
+- Correct UP and DOWN directions.
+- No accidental shortcuts.
+- No invented railway connections.
+- No proposed projects represented as operational.
+- No incorrect mixing of local and fast tracks.
+
+Treat proposed, sanctioned, under-construction and commissioned infrastructure as different statuses.
+
+Only commissioned operational infrastructure belongs in the default operational world.
+
+---
+
+# 6. RAILWAY DATA ACCURACY
+
+Audit the reported 119-station database.
+
+Verify:
+- Unique station IDs.
+- Station names.
+- Station codes.
+- Marathi names.
+- English names.
+- Coordinates.
+- Elevation.
+- Corridor membership.
+- Station order.
+- Junction relationships.
+- Platform arrangements.
+- Track arrangements.
+- Operational status.
+
+Resolve duplicate records and incorrect station ordering.
+
+The total station count must be calculated from unique station IDs, not by adding route station counts.
+
+For every track section store:
+
+- Section ID.
+- Start station.
+- End station.
+- Corridor.
+- Direction.
+- Track purpose.
+- Track count.
+- Section distance.
+- Gradient.
+- Curve information.
+- Speed restrictions.
+- Electrification.
+- Operational status.
+- Data source.
+- Verification status.
+
+Do not invent railway engineering values.
+
+Use null or approximate values when reliable information is unavailable.
+
+Maintain a source and verification record.
+
+Resolve reported distance discrepancies, including:
+
+- CSMT–Kasara.
+- CSMT–Khopoli.
+- Churchgate–Dahanu Road.
+
+Explain the distance calculation method and distinguish route distance from approximate geographical distance.
+
+---
+
+# 7. COMPLETE RAILWAY TRACK GEOMETRY
+
+This is one of the highest-priority tasks.
+
+Generate continuous physical 3D track geometry for every operational track section.
+
+Use the existing TrackPath and RailwayPathResolver architecture where possible.
+
+Required elements:
+
+- Broad Gauge rails.
+- Correct rail gauge.
+- Sleepers.
+- Rail fasteners.
+- Ballast.
+- Multiple parallel tracks.
+- Local and fast tracks.
+- Curves.
+- Transition curves.
+- Gradients.
+- Turnouts.
+- Crossovers.
+- Junctions.
+- Loop lines.
+- Station approaches.
+- Station departures.
+- Terminal tracks.
+- Yard tracks.
+- Stabling sidings.
+- Inspection tracks.
+- Buffer stops.
+
+## Track continuity rules
+
+- Track sections must connect without visible gaps.
+- Track sections must preserve correct direction.
+- Parallel tracks must remain independent.
+- Track curves must be smooth.
+- Train bogies must follow local track tangents.
+- Coaches must not overlap or derail.
+- Junction geometry must align correctly.
+- No artificial track endings between operational stations.
+- No unrelated tracks may intersect accidentally.
+
+The track must continue naturally beyond the player's immediate camera view.
+
+Do not generate a short track segment around Dadar and call the network complete.
+
+---
+
+# 8. COMPLETE RAILWAY ELECTRIFICATION
+
+Generate a convincing 25 kV AC overhead electrification environment.
+
+Include:
+
+- OHE masts.
+- Portals.
+- Cantilevers.
+- Contact wires.
+- Catenary wires.
+- Droppers where appropriate.
+- Insulators.
+- Registration arms.
+- Neutral section equipment where applicable.
+- Sectioning equipment.
+- Traction-related trackside infrastructure.
+
+Verify pantograph clearance.
+
+Do not place overhead wires or support structures through buildings, platforms or the train.
+
+Maintain visual and physical consistency across all corridors.
+
+---
+
+# 9. RAILWAY SIGNALLING AND INTERLOCKING
+
+Implement railway-aware signalling.
+
+Include:
+
+- Four-aspect signal systems where appropriate.
+- Signal masts.
+- Signal heads.
+- Relay cabinets.
+- Block sections.
+- Signal positions.
+- Junction protection.
+- Track occupancy.
+- Direction-aware signalling.
+- Route conflicts.
+- Switch protection.
+- Station approach signals.
+- Starter and home signals.
+
+Signals must respond to actual track occupancy and valid route reservations.
+
+A train must not receive a clear signal into an occupied or conflicting block.
+
+Do not implement signals as decorative objects only.
+
+---
+
+# 10. FIX THE COMPLETE 3D WORLD
+
+The screenshots show an incomplete world.
+
+Correct the actual world-generation system.
+
+Inspect:
+
+- MumbaiWorld.ts.
+- WorldStreamingManager.ts.
+- StationBuilder.ts.
+- ExploreScene.ts.
+- Track generation.
+- World chunk registration.
+- Camera clipping.
+- Frustum culling.
+- Scene attachment.
+- Coordinate conversion.
+- Route loading.
+
+Identify why railway tracks and scenery terminate in the visible distance.
+
+Fix the actual cause.
+
+## A. GROUND GENERATION
+
+Remove the repetitive checkerboard appearance.
+
+Generate geographically appropriate surfaces:
+
+- Railway ballast.
+- Soil.
+- Concrete.
+- Roads.
+- Footpaths.
+- Station surfaces.
+- Grass.
+- Vegetation.
+- Industrial ground.
+- Urban surfaces.
+- Creek and bridge surroundings where appropriate.
+
+Use material variation and efficient texture techniques.
+
+## B. CITY ENVIRONMENT
+
+Generate realistic and varied Mumbai surroundings.
+
+### SOUTH MUMBAI
+Historic buildings, dense commercial blocks, older residential architecture, narrow roads and railway infrastructure.
+
+### CENTRAL MUMBAI
+Industrial structures, older residential buildings, workshops, commercial properties, dense urban surroundings and railway colonies.
+
+### EASTERN SUBURBS
+Residential buildings, markets, roads, commercial structures and railway colonies.
+
+### WESTERN SUBURBS
+Residential towers, shops, markets, commercial buildings, roads and flyovers.
+
+### THANE AND KALYAN
+Suburban residential developments, commercial areas, roads, railway yards and denser urban surroundings.
+
+### VASAI AND VIRAR
+Suburban buildings, open spaces, vegetation, local roads and developing residential areas.
+
+### NAVI MUMBAI
+Planned urban blocks, wider roads, commercial buildings, greenery and distinct station surroundings.
+
+Generate:
+- Buildings of different heights.
+- Windows.
+- Balconies.
+- Rooftops.
+- Water tanks.
+- Shops.
+- Markets.
+- Roads.
+- Vehicles.
+- Auto-rickshaws.
+- Buses.
+- Flyovers.
+- Trees.
+- Boundary walls.
+- Streetlights.
+- Pedestrian areas.
+- Distant skylines.
+
+Avoid repeated identical buildings and empty checkerboard horizons.
+
+Use deterministic generation so locations look consistent whenever revisited.
+
+## C. WORLD DEPTH
+
+The visible world must extend naturally into the distance.
+
+Use:
+- Distance-based LOD.
+- Atmospheric perspective.
+- Distant building clusters.
+- Terrain variation.
+- Appropriate sky and lighting.
+- Natural transitions between urban zones.
+
+Do not hide missing railway geometry behind fog or decorative scenery.
+
+---
+
+# 11. PHYSICAL ENVIRONMENTS FOR EVERY STATION
+
+Every operational station must have a physical 3D environment.
+
+Do not confuse a station record or station builder function with an actual generated station.
+
+Each station must have:
+
+- Correct location.
+- Correct connected tracks.
+- Passenger platforms.
+- Platform edges.
+- Yellow safety markings.
+- Concrete surface.
+- Shelters.
+- Columns.
+- Lighting.
+- Benches.
+- Nameboards.
+- Marathi signage.
+- English signage.
+- Hindi signage where configured.
+- Platform number boards.
+- Entry and exit structures.
+- Footbridge or subway according to station profile.
+- Stairs.
+- Railway boundary structures.
+- Appropriate surrounding buildings.
+
+## Landmark stations
+
+Give additional detail to:
+
+CSMT, Dadar, Kurla, Thane, Kalyan, Churchgate, Bandra, Andheri, Borivali, Virar, Wadala Road, Vashi, Nerul, Belapur and Panvel.
+
+Each major station should have recognisable architectural characteristics.
+
+Smaller stations should have varied modular environments.
+
+Do not make all stations identical copies.
+
+## Platform alignment
+
+Verify:
+- Correct platform side.
+- Correct train stopping position.
+- Correct train-to-platform clearance.
+- Door alignment.
+- No train-platform collision.
+- No platform geometry blocking tracks.
+- Appropriate platform dimensions based on available verified data.
+
+---
+
+# 12. RAILWAY YARDS AND MAINTENANCE AREAS
+
+Generate railway yards only where supported by verified infrastructure information.
+
+Include:
+- Inspection pit lines.
+- Stabling lines.
+- Sick lines.
+- Washing facilities.
+- Workshops.
+- Maintenance sheds.
+- Yard tracks.
+- Staff buildings.
+- Buffer stops.
+- Yard lighting.
+- OHE structures.
+
+Differentiate passenger platforms from maintenance and stabling infrastructure.
+
+Do not generate identical fictional yards at every station.
+
+---
+
+# 13. PASSENGER SYSTEM
+
+Improve and complete StationCrowdManager.
+
+Generate passengers throughout the network.
+
+Required behaviours:
+
+- Waiting.
+- Walking.
+- Platform movement.
+- Footbridge movement.
+- Queue formation.
+- Boarding.
+- Alighting.
+- Door awareness.
+- Train arrival reactions.
+- Train departure reactions.
+- Crowd density variation.
+- Rush-hour density.
+- Safe platform boundaries.
+
+Passengers must not:
+- Spawn on railway tracks.
+- Intersect moving trains.
+- Walk through walls.
+- Stand beyond unsafe platform edges.
+- Enter incorrect doors.
+
+Use InstancedMesh, LOD and efficient animation.
+
+---
+
+# 14. COMPLETE WORLD STREAMING
+
+The WorldStreamingManager must support the entire network.
+
+The train's actual railway position determines which world chunks are loaded.
+
+Keep loaded:
+- Previous station.
+- Current station.
+- Next station.
+- Upcoming track sections.
+- Nearby buildings.
+- Platforms.
+- Railway infrastructure.
+- Passenger environments.
+
+Load future chunks before the train reaches them.
+
+Unload distant chunks safely.
+
+Fix:
+- Missing chunks.
+- Track gaps.
+- Duplicate stations.
+- Incorrect chunk positions.
+- Incorrect world origins.
+- Early geometry disposal.
+- Missing station registration.
+- Incorrect visibility culling.
+- Memory leaks.
+- Route transition problems.
+
+The player must continuously see the railway world ahead and behind the train.
+
+There must be no visible boundary where the world simply ends.
+
+---
+
+# 15. FULL TRAIN INTEGRATION
+
+Preserve the existing train systems.
+
+Inspect and improve only where necessary:
+
+- TrainPhysics.ts.
+- TrackPath.ts.
+- TrainBuilder.ts.
+- TrainCameraModes.ts.
+- AudioManager.ts.
+- TrainAudio.ts.
+- TrainDrivingDock.tsx.
+- ExploreScene.ts.
+- ExploreHud.tsx.
+
+Preserve:
+
+- 12-coach Broad Gauge EMU.
+- 24 independently articulated bogies.
+- Existing coach geometry.
+- Existing train livery.
+- Physics.
+- Motor behaviour.
+- Pneumatic brakes.
+- Wheel rotation.
+- Pantograph.
+- Doors.
+- Headlights.
+- Horn.
+- Audio.
+- Six camera modes.
+- Driving controls.
+- HUD.
+
+Test the train on long routes, sharp curves, gradients, junctions and station approaches.
+
+No derailment, coach overlap, bogie instability or NaN values.
+
+---
+
+# 16. COMPLETE ROUTE SELECTION AND NAVIGATION
+
+The route selector must represent the actual operational network.
+
+Allow selection of:
+
+- Central.
+- Western.
+- Harbour.
+- Trans-Harbour.
+- Kasara branch.
+- Karjat branch.
+- Khopoli branch.
+- Valid connecting routes.
+
+Allow the player to select:
+- Starting station.
+- Destination station.
+- Direction.
+- Available route.
+
+When the player selects a route:
+
+1. Resolve the actual railway path.
+2. Load the correct track geometry.
+3. Load the correct station environments.
+4. Load the correct surrounding world.
+5. Position the train at the selected origin.
+6. Configure the correct travel direction.
+7. Reset only necessary route-specific state.
+8. Preserve all working train systems.
+
+Do not simply change the route name in the HUD.
+
+Route switching must change the physical world.
+
+---
+
+# 17. COMPLETE REAL TRAIN TRAVERSAL
+
+This is a mandatory acceptance requirement.
+
+Test the existing train using actual physics.
+
+Complete these journeys:
+
+CENTRAL:
+CSMT → Kalyan.
+
+KASARA:
+Kalyan → Kasara.
+
+KARJAT:
+Kalyan → Karjat.
+
+KHOPOLI:
+Karjat → Khopoli.
+
+WESTERN:
+Churchgate → Virar.
+
+WESTERN EXTENSION:
+Virar → Dahanu Road.
+
+HARBOUR:
+CSMT → Panvel.
+
+HARBOUR-WESTERN:
+Wadala Road → Mahim.
+
+TRANS-HARBOUR:
+Thane → Vashi → Nerul → Panvel.
+
+For each journey:
+- Traverse every intermediate station.
+- Follow the actual generated track.
+- Pass through real junction geometry.
+- Obey valid signals.
+- Use actual train physics.
+- Stop at stations.
+- Restart and continue.
+- Verify coach and bogie stability.
+
+No teleportation.
+
+No setDistance() debug shortcut.
+
+No direct position manipulation.
+
+If a route cannot be completed, fix the failure or report the exact remaining limitation.
+
+Do not mark it fully playable until the entire journey is demonstrated.
+
+---
+
+# 18. PERFORMANCE OPTIMIZATION
+
+The complete world must remain playable.
+
+Implement:
+- InstancedMesh.
+- LOD.
+- Frustum culling.
+- Geometry merging.
+- Texture atlases.
+- Chunk streaming.
+- Object pooling.
+- Efficient shadows.
+- Crowd density LOD.
+- Safe geometry and material disposal.
+- Reusable procedural assets.
+
+Measure actual:
+- FPS.
+- Average frame time.
+- 1% low frame time.
+- Draw calls.
+- Triangle count.
+- Memory usage.
+- Active chunks.
+- Passenger count.
+- Loaded station count.
+
+Test dense stations and open railway sections.
+
+Do not invent benchmark results.
+
+---
+
+# 19. VISUAL QUALITY REQUIREMENTS
+
+Use the latest user-provided browser screenshots as the visual defect reference.
+
+The new environment must visibly improve:
+
+1. Continuous railway tracks.
+2. Multiple correctly aligned parallel tracks.
+3. Proper ballast and sleepers.
+4. Realistic overhead electrification.
+5. Complete platform geometry.
+6. Detailed station buildings.
+7. Footbridges and staircases.
+8. Station nameboards.
+9. Passengers.
+10. Varied Mumbai buildings.
+11. Roads and surrounding city structures.
+12. Natural distant skyline.
+13. Correct ground materials.
+14. Lighting and shadows.
+15. Environmental depth.
+
+Do not produce another isolated railway scene.
+
+Do not make only Dadar look good.
+
+The same quality system must work throughout the operational network.
+
+---
+
+# 20. USER INTERFACE IMPROVEMENTS
+
+Preserve the existing driving interface but improve usability.
+
+- Make the driving dock collapsible.
+- Reduce unnecessary screen obstruction.
+- Keep speed and brake telemetry readable.
+- Maintain clear control labels.
+- Ensure route selection is understandable.
+- Display the current station.
+- Display the next station.
+- Display distance to next station.
+- Display signal aspect.
+- Display current route and direction.
+- Provide clear feedback when loading routes.
+
+Do not remove existing controls.
+
+---
+
+# 21. DEVELOPMENT ORDER
+
+Execute the work in this order.
+
+MILESTONE 1:
+Complete project audit and root-cause analysis.
+
+MILESTONE 2:
+Correct station data and railway topology.
+
+MILESTONE 3:
+Complete operational track connectivity.
+
+MILESTONE 4:
+Generate continuous 3D track geometry.
+
+MILESTONE 5:
+Correct junctions, crossovers and branch connections.
+
+MILESTONE 6:
+Fix world coordinate and world streaming systems.
+
+MILESTONE 7:
+Generate physical environments for every station.
+
+MILESTONE 8:
+Generate detailed Mumbai urban environments.
+
+MILESTONE 9:
+Generate OHE, signalling and railway infrastructure.
+
+MILESTONE 10:
+Generate verified railway yards.
+
+MILESTONE 11:
+Complete passenger systems.
+
+MILESTONE 12:
+Integrate route selection and train navigation.
+
+MILESTONE 13:
+Perform complete real train traversal.
+
+MILESTONE 14:
+Optimize the entire world.
+
+MILESTONE 15:
+Run final browser, visual and regression tests.
+
+Do not skip milestones.
+
+Do not declare the entire project complete when only one milestone passes.
+
+---
+
+# 22. AUTOMATED TESTING
+
+Create or extend verification scripts.
+
+## NETWORK TESTS
+
+- Unique station IDs.
+- Correct station count.
+- Correct corridor membership.
+- All operational stations connected.
+- No invalid edges.
+- Correct junction connections.
+- Correct branch connections.
+- Directional route resolution.
+- Correct track purposes.
+- No proposed infrastructure in operational routes.
+
+## TRACK TESTS
+
+- Continuous geometry.
+- No missing track sections.
+- No unintended gaps.
+- Correct parallel track separation.
+- Smooth curve transitions.
+- Correct junction alignment.
+- Correct track direction.
+- No accidental track intersections.
+
+## TRAIN TESTS
+
+- 12 coach poses.
+- 24 bogie poses.
+- Straight track.
+- Curved track.
+- Transition curves.
+- Gradients.
+- Junctions.
+- Reverse travel.
+- Braking.
+- Station stopping.
+- No derailment.
+- No NaN or Infinity.
+
+## WORLD TESTS
+
+- Every station registered.
+- Every station geometry generated.
+- Every station scene attached.
+- Every station chunk loaded.
+- Every station visible in browser.
+- Continuous scenery.
+- No missing chunks.
+- No duplicate environments.
+- No memory leaks.
+
+## REGRESSION TESTS
+
+- Menu.
+- Train selection.
+- Train model.
+- Physics.
+- Audio.
+- Camera modes.
+- HUD.
+- Driving controls.
+- Route selection.
+- Signals.
+- Passenger behaviour.
+- Fullscreen.
+
+---
+
+# 23. REQUIRED VISUAL EVIDENCE
+
+Capture actual browser screenshots of:
+
+CENTRAL:
+CSMT, Byculla, Parel, Dadar, Matunga, Sion, Kurla, Ghatkopar, Thane, Kalyan, Kasara and Karjat.
+
+WESTERN:
+Churchgate, Mumbai Central, Dadar, Bandra, Andheri, Borivali, Virar and Dahanu Road.
+
+HARBOUR:
+CSMT, Wadala Road, Kurla, Vashi, Nerul, Belapur and Panvel.
+
+Also capture:
+- Major junctions.
+- Railway yards.
+- Dense city environments.
+- Footbridges.
+- Passenger platforms.
+- Train arriving at a station.
+- Train departing from a station.
+- Long-distance track views.
+- Drone camera views.
+- Cab camera views.
+
+Screenshots must show genuinely different locations.
+
+Do not use multiple camera angles of the same station as proof of network coverage.
+
+---
+
+# 24. REQUIRED FINAL DOCUMENTATION
+
+Generate:
+
+1. Complete station database report.
+2. Complete railway network graph report.
+3. Track-section coverage report.
+4. Route distance report.
+5. Junction and branch validation report.
+6. Station environment coverage report.
+7. World streaming report.
+8. Train traversal report.
+9. Signalling report.
+10. Passenger system report.
+11. Performance benchmark report.
+12. Browser screenshot collection.
+13. Known limitations report.
+
+For every station distinguish:
+
+DATA_EXISTS
+GEOMETRY_GENERATED
+SCENE_REGISTERED
+CHUNK_LOADED
+VISIBLE_IN_BROWSER
+TRAIN_APPROACH_TESTED
+TRAIN_STOP_TESTED
+FULLY_IMPLEMENTED
+
+For every route distinguish:
+
+DATABASE_ONLY
+TOPOLOGY_CONNECTED
+TRACK_GEOMETRY_GENERATED
+TRAIN_TRAVERSAL_TESTED
+FULLY_PLAYABLE
+
+Never use one status to imply another.
+
+---
+
+# 25. STRICT DEVELOPMENT AND PRESERVATION RULES
+
+This is an existing project with significant development already completed.
+
+Therefore:
+
+- Do not rebuild from scratch.
+- Do not replace the working train model.
+- Do not rewrite working physics without a demonstrated defect.
+- Do not delete existing files without dependency analysis.
+- Do not create duplicate architecture.
+- Do not create temporary fake railway connections.
+- Do not use teleportation to fake route traversal.
+- Do not use decorative track geometry as a substitute for playable track.
+- Do not claim a station exists because its data record exists.
+- Do not claim a route is playable because BFS finds a path.
+- Do not claim world streaming works because chunks are registered.
+- Do not claim visual completion without browser screenshots.
+
+Use incremental implementation.
+
+After each milestone:
+1. Run TypeScript checks.
+2. Run the production build.
+3. Test the browser.
+4. Check console errors.
+5. Check for regressions.
+6. Preserve a working checkpoint.
+
+If a change breaks a working system, correct the regression before continuing.
+
+Do not wait for the user to approve every small correction. Implement the task systematically and report any genuine blocker that requires a user decision.
+
+---
+
+# 26. FINAL ACCEPTANCE CRITERIA
+
+The master task is complete only when all of the following are demonstrated:
+
+1. All operational stations are correctly represented.
+2. All operational railway sections are connected.
+3. All operational track sections have physical 3D geometry.
+4. All important junctions and branches work.
+5. All playable routes have continuous train traversal.
+6. Every operational station has a physical environment.
+7. Station environments are visible at their correct locations.
+8. The world continues naturally beyond the visible camera distance.
+9. There are no unintended track endings.
+10. There are no missing world chunks.
+11. Mumbai surroundings vary geographically.
+12. Platforms and railway infrastructure are correctly aligned.
+13. OHE and signalling are integrated.
+14. Passenger systems function safely.
+15. Route switching loads the correct physical world.
+16. The 12-coach train works across the network.
+17. World streaming remains stable.
+18. Performance is measured and acceptable.
+19. Existing systems have no regressions.
+20. Browser screenshots and traversal evidence prove completion.
+
+## FINAL VERDICT
+
+The finished product must be:
+
+A COMPLETE, CONTINUOUS, GEOGRAPHICALLY COHERENT, DETAILED AND FULLY PLAYABLE 3D MUMBAI SUBURBAN RAILWAY SIMULATOR.
+
+The player must be able to drive across the operational Central, Western and Harbour railway networks, their branches and valid connections, passing through realistic stations, railway yards, urban environments, junctions and surrounding Mumbai scenery.
+
+The world must not end after a short track segment.
+
+The simulator must not display only Dadar.
+
+The entire railway network must exist physically, not just in the database.
+
+**BUILD THE COMPLETE RAILWAY WORLD. FIX ALL EXISTING DEFECTS. CONNECT ALL OPERATIONAL STATIONS. MAKE THE ENTIRE NETWORK PLAYABLE.**

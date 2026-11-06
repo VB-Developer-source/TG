@@ -52,8 +52,8 @@ function buildingGeometry(b: Building, color: THREE.Color): THREE.BufferGeometry
 
 function rowOfBuildings(rng: Rng, side: number, xStart: number, depth: [number, number], height: [number, number], width: [number, number]): Building[] {
   const list: Building[] = [];
-  let z = -TRACK_HALF - 60;
-  while (z < TRACK_HALF + 60) {
+  let z = -1200;
+  while (z < 1200) {
     const sz = range(rng, width[0], width[1]);
     const sx = range(rng, depth[0], depth[1]);
     const h = range(rng, height[0], height[1]);
@@ -69,16 +69,16 @@ export function buildBuildings(m: WorldMaterials): THREE.Object3D[] {
   const mid: Building[] = [];
   const far: Building[] = [];
   for (const side of [-1, 1]) {
-    near.push(...rowOfBuildings(rng, side, BUILDINGS_START_X, [9, 15], [9, 22], [10, 22]));
-    mid.push(...rowOfBuildings(rng, side, BUILDINGS_START_X + 20, [12, 20], [15, 46], [14, 28]));
-    for (let i = 0; i < 40; i++) {
+    near.push(...rowOfBuildings(rng, side, BUILDINGS_START_X, [9, 15], [9, 24], [10, 22]));
+    mid.push(...rowOfBuildings(rng, side, BUILDINGS_START_X + 20, [12, 20], [15, 48], [14, 28]));
+    for (let i = 0; i < 90; i++) {
       const sx = range(rng, 16, 36);
       far.push({
-        x: side * range(rng, 85, 300),
-        z: range(rng, -380, 380),
+        x: side * range(rng, 75, 400),
+        z: range(rng, -1350, 1350),
         sx,
         sz: range(rng, 16, 36),
-        h: range(rng, 28, 95),
+        h: range(rng, 30, 110),
       });
     }
   }

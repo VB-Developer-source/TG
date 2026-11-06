@@ -122,6 +122,7 @@ export function ExploreHud({
   const handleRouteSelect = (route: PlayableRoute) => {
     defaultTrackPath.setRoute(route);
     setActiveRoute(route);
+    trainPhysics.setDistance(0);
     window.dispatchEvent(new CustomEvent("mls:route:select", { detail: { route } }));
   };
 

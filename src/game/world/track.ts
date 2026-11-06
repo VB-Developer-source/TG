@@ -15,10 +15,10 @@ import {
 } from "./layout";
 import type { WorldMaterials } from "./materials";
 
-const GROUND_SIZE = 1400;
-const GROUND_TILE = 10;
+const GROUND_SIZE = 2800;
+const GROUND_TILE = 75;
 const TRACKBED_WIDTH = 34;
-const TRACKBED_TILE = 4;
+const TRACKBED_TILE = 8;
 const WALL = { height: 2.4, thickness: 0.25 } as const;
 
 export function buildGround(m: WorldMaterials): THREE.Object3D[] {

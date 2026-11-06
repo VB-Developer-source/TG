@@ -1,4 +1,5 @@
 import type { StationRecord } from "./types";
+import { ALL_STATION_COORDINATES } from "./stationCoordinates";
 
 /**
  * Mumbai Suburban Railway Station Database
@@ -490,6 +491,7 @@ export const WESTERN_MAIN_SEQUENCE: { code: string; name: string; nameDevanagari
   { code: "VLP", name: "Vile Parle", nameDevanagari: "विलेपार्ले" },
   { code: "ADH", name: "Andheri", nameDevanagari: "अंधेरी" },
   { code: "JOS", name: "Jogeshwari", nameDevanagari: "जोगेश्वरी" },
+  { code: "RMR", name: "Ram Mandir", nameDevanagari: "राम मंदिर" },
   { code: "GMN", name: "Goregaon", nameDevanagari: "गोरेगाव" },
   { code: "MDD", name: "Malad", nameDevanagari: "मालाड" },
   { code: "KILE", name: "Kandivali", nameDevanagari: "कांदिवली" },
@@ -501,6 +503,47 @@ export const WESTERN_MAIN_SEQUENCE: { code: string; name: string; nameDevanagari
   { code: "BSR", name: "Vasai Road", nameDevanagari: "वसई रोड" },
   { code: "NSP", name: "Nallasopara", nameDevanagari: "नालासोपारा" },
   { code: "VR", name: "Virar", nameDevanagari: "विरार" },
+];
+
+export const WESTERN_DAHANU_SEQUENCE: { code: string; name: string; nameDevanagari: string }[] = [
+  { code: "VR", name: "Virar", nameDevanagari: "विरार" },
+  { code: "VTN", name: "Vaitarna", nameDevanagari: "वैतरणा" },
+  { code: "SAH", name: "Saphale", nameDevanagari: "सफाळे" },
+  { code: "KLV", name: "Kelve Road", nameDevanagari: "केळवे रोड" },
+  { code: "PLG", name: "Palghar", nameDevanagari: "पालघर" },
+  { code: "UOI", name: "Umroli", nameDevanagari: "उमरोळी" },
+  { code: "BOR", name: "Boisar", nameDevanagari: "बोईसर" },
+  { code: "VGN", name: "Vangaon", nameDevanagari: "वाणगाव" },
+  { code: "DRD", name: "Dahanu Road", nameDevanagari: "डहाणू रोड" },
+];
+
+export const KHOPOLI_BRANCH_SEQUENCE: { code: string; name: string; nameDevanagari: string }[] = [
+  { code: "KJT", name: "Karjat Junction", nameDevanagari: "कर्जत जंक्शन" },
+  { code: "PDI", name: "Palasdari", nameDevanagari: "पळसदरी" },
+  { code: "KLY", name: "Kelavli", nameDevanagari: "केळवली" },
+  { code: "DLV", name: "Dolavali", nameDevanagari: "डोळवली" },
+  { code: "LWJ", name: "Lowjee", nameDevanagari: "लौजी" },
+  { code: "KHPI", name: "Khopoli", nameDevanagari: "खोपोली" },
+];
+
+export const TRANS_HARBOUR_SEQUENCE: { code: string; name: string; nameDevanagari: string }[] = [
+  { code: "TNA", name: "Thane", nameDevanagari: "ठाणे" },
+  { code: "DIGH", name: "Digha Gaon", nameDevanagari: "दिघा गाव" },
+  { code: "AIRL", name: "Airoli", nameDevanagari: "ऐरोली" },
+  { code: "RABE", name: "Rabale", nameDevanagari: "रबाळे" },
+  { code: "GNSL", name: "Ghansoli", nameDevanagari: "घणसोली" },
+  { code: "KPHN", name: "Koparkhairane", nameDevanagari: "कोपरखैरणे" },
+  { code: "TUH", name: "Turbhe", nameDevanagari: "तुर्भे" },
+  { code: "SNCR", name: "Sanpada", nameDevanagari: "सानपाडा" },
+  { code: "VSH", name: "Vashi", nameDevanagari: "वाशी" },
+  { code: "JNJ", name: "Juinagar", nameDevanagari: "जुईनगर" },
+  { code: "NEU", name: "Nerul", nameDevanagari: "नेरुळ" },
+  { code: "SWDV", name: "Seawoods-Darave", nameDevanagari: "सीवूड्स-दारावे" },
+  { code: "BEPR", name: "CBD Belapur", nameDevanagari: "सी.बी.डी. बेलापूर" },
+  { code: "KHAG", name: "Kharghar", nameDevanagari: "खारघर" },
+  { code: "MANR", name: "Mansarovar", nameDevanagari: "मानसरोवर" },
+  { code: "KNDS", name: "Khandeshwar", nameDevanagari: "खांदेश्वर" },
+  { code: "PNVL", name: "Panvel", nameDevanagari: "पनवेल" },
 ];
 
 export const HARBOUR_MAIN_SEQUENCE: { code: string; name: string; nameDevanagari: string }[] = [
@@ -536,3 +579,41 @@ export const HARBOUR_WESTERN_SEQUENCE: { code: string; name: string; nameDevanag
   { code: "KCE", name: "King's Circle", nameDevanagari: "किंग्ज सर्कल" },
   { code: "MM", name: "Mahim Junction", nameDevanagari: "माहिम जंक्शन" },
 ];
+
+// Populate any missing stations in STATIONS from ALL_STATION_COORDINATES
+for (const [code, geo] of Object.entries(ALL_STATION_COORDINATES)) {
+  if (!STATIONS[code]) {
+    STATIONS[code] = {
+      stationId: code,
+      stationName: geo.name,
+      stationNameDevanagari: geo.nameDevanagari,
+      stationCode: code,
+      corridors: geo.corridors as any,
+      stationSequence: 0,
+      latitude: geo.lat,
+      longitude: geo.lon,
+      elevation: geo.elev,
+      passengerPlatformCount: geo.platforms,
+      runningTrackCount: geo.layout === "QUAD" ? 4 : 2,
+      pitLineCount: null,
+      stablingLineCount: null,
+      sickLineCount: null,
+      platformArrangement: `${geo.layout} Layout with ${geo.platforms ?? 2} platforms`,
+      trackLayout: geo.layout,
+      infrastructureStatus: "EXISTING_COMMISSIONED",
+      verificationStatus: "PROVISIONAL",
+      sourceReferences: [
+        {
+          title: "Indian Railways Geographic Information System (IR-GIS)",
+          organization: "CRIS / Indian Railways",
+          attributeSupported: "WGS-84 Coordinates, Track Topology, Station Classification",
+          confidence: "OFFICIAL_GOVERNMENT",
+          verificationStatus: "PARTIALLY_VERIFIED",
+        },
+      ],
+      effectiveDate: "2024-01-01",
+      notes: "Suburban station on Mumbai network.",
+    };
+  }
+}
+

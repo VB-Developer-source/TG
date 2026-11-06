@@ -22,8 +22,10 @@ export type CorridorId =
   | "KARJAT_BRANCH"
   | "KHOPOLI_BRANCH"
   | "WESTERN"
+  | "WESTERN_DAHANU"
   | "HARBOUR"
-  | "HARBOUR_WESTERN_CHORD";
+  | "HARBOUR_WESTERN_CHORD"
+  | "TRANS_HARBOUR";
 
 export type TrackLayoutType =
   | "DOUBLE"

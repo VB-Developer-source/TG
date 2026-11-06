@@ -32,9 +32,9 @@ export interface QualityProfile {
 }
 
 export const QUALITY_PROFILES: Readonly<Record<GraphicsQuality, QualityProfile>> = {
-  low: { maxPixelRatio: 1, minPixelRatio: 0.6, shadowMapSize: 1024, drawDistance: 240, anisotropy: 1 },
-  medium: { maxPixelRatio: 1.5, minPixelRatio: 0.75, shadowMapSize: 2048, drawDistance: 340, anisotropy: 4 },
-  high: { maxPixelRatio: 2, minPixelRatio: 1, shadowMapSize: 4096, drawDistance: 440, anisotropy: 8 },
+  low: { maxPixelRatio: 1, minPixelRatio: 0.6, shadowMapSize: 1024, drawDistance: 1500, anisotropy: 1 },
+  medium: { maxPixelRatio: 1.5, minPixelRatio: 0.75, shadowMapSize: 2048, drawDistance: 2500, anisotropy: 4 },
+  high: { maxPixelRatio: 2, minPixelRatio: 1, shadowMapSize: 4096, drawDistance: 3800, anisotropy: 8 },
 };
 
 function roundToStep(value: number, step: number): number {

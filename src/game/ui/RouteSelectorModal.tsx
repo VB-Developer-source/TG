@@ -48,7 +48,27 @@ export function RouteSelectorModal({
   const currentRoute =
     AVAILABLE_ROUTES.find((r) => r.routeId === selectedRouteId) ?? ROUTE_CENTRAL_LOCAL_PLAYABLE;
 
-  const corridorRoutes = AVAILABLE_ROUTES.filter((r) => r.corridorId === selectedCorridorTab);
+  const corridorRoutes = AVAILABLE_ROUTES.filter((r) => {
+    if (selectedCorridorTab === "CENTRAL") {
+      return (
+        r.corridorId === "CENTRAL" ||
+        r.corridorId === "KASARA_BRANCH" ||
+        r.corridorId === "KARJAT_BRANCH" ||
+        r.corridorId === "KHOPOLI_BRANCH"
+      );
+    }
+    if (selectedCorridorTab === "WESTERN") {
+      return r.corridorId === "WESTERN" || r.corridorId === "WESTERN_DAHANU";
+    }
+    if (selectedCorridorTab === "HARBOUR") {
+      return (
+        r.corridorId === "HARBOUR" ||
+        r.corridorId === "HARBOUR_WESTERN_CHORD" ||
+        r.corridorId === "TRANS_HARBOUR"
+      );
+    }
+    return false;
+  });
 
   const handleActivateRoute = (route: PlayableRoute) => {
     setSelectedRouteId(route.routeId);
@@ -75,11 +95,11 @@ export function RouteSelectorModal({
               <h2 className="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
                 <span>Mumbai Suburban Railway Network</span>
                 <span className="text-[10px] font-mono uppercase bg-emerald-950 text-emerald-400 border border-emerald-700 px-2 py-0.5 rounded-full">
-                  Phase 4 Live
+                  Phase 5 Operational
                 </span>
               </h2>
               <p className="text-xs text-slate-400">
-                Continuous track graph, verified station coordinates, and corridor navigation
+                Continuous track graph, verified station coordinates, and multi-corridor 3D world
               </p>
             </div>
           </div>
@@ -117,7 +137,7 @@ export function RouteSelectorModal({
             type="button"
             onClick={() => {
               setSelectedCorridorTab("WESTERN");
-              setSelectedRouteId("western-mainline-churchgate-virar");
+              setSelectedRouteId("western-suburban-churchgate-bandra");
             }}
             className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-colors border-t border-x cursor-pointer flex items-center gap-2 ${
               selectedCorridorTab === "WESTERN"
@@ -133,7 +153,7 @@ export function RouteSelectorModal({
             type="button"
             onClick={() => {
               setSelectedCorridorTab("HARBOUR");
-              setSelectedRouteId("harbour-mainline-csmt-panvel");
+              setSelectedRouteId("harbour-chord-csmt-mahim");
             }}
             className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-colors border-t border-x cursor-pointer flex items-center gap-2 ${
               selectedCorridorTab === "HARBOUR"
@@ -153,7 +173,7 @@ export function RouteSelectorModal({
             {corridorRoutes.map((route) => {
               const isSelected = route.routeId === selectedRouteId;
               const isActive = route.routeId === activeRouteId;
-              const is3DPlayable = route.routeId === "central-local-parel-sion";
+              const is3DPlayable = Boolean(route.curvePoints && route.curvePoints.length >= 2);
 
               return (
                 <div

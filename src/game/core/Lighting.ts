@@ -16,7 +16,7 @@ export const ATMOSPHERE = {
   /** Direction from the scene toward the sun. */
   sunDirection: new THREE.Vector3(-0.58, 0.3, -0.76).normalize(),
   environmentIntensity: 0.55,
-  fogNear: 40,
+  fogNear: 600,
 } as const;
 
 const SHADOW_EXTENT = 70;
@@ -101,7 +101,7 @@ export class Lighting {
     this.sky.frustumCulled = false;
     this.sky.renderOrder = -1;
 
-    this.fog = new THREE.Fog(ATMOSPHERE.fog, ATMOSPHERE.fogNear, 340);
+    this.fog = new THREE.Fog(ATMOSPHERE.fog, ATMOSPHERE.fogNear, 2500);
     scene.fog = this.fog;
     scene.background = ATMOSPHERE.fog.clone();
     scene.add(this.hemi, this.ambient, this.sun, this.sun.target, this.sky);
@@ -109,6 +109,7 @@ export class Lighting {
 
   applySettings(profile: QualityProfile, shadows: boolean): void {
     this.fog.far = profile.drawDistance;
+    this.fog.near = Math.min(800, profile.drawDistance * 0.35);
     this.sun.castShadow = shadows;
     const size = profile.shadowMapSize;
     if (this.sun.shadow.mapSize.x !== size) {

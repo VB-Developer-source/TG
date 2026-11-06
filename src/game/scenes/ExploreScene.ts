@@ -16,6 +16,7 @@ import type { GameScene } from "./SceneManager";
 import { trainPhysics } from "../train/TrainPhysics";
 import { defaultTrackPath } from "../train/TrackPath";
 import { SignalSystem3D } from "../world/signal";
+import { WorldStreamingManager } from "../world/WorldStreamingManager";
 
 export type ActiveCameraModeId = "free" | "cab" | "passenger" | "follow" | "railfan" | "drone";
 
@@ -37,13 +38,24 @@ export class ExploreScene implements GameScene {
   private railfanCamera: RailfanCameraMode | null = null;
   private droneCamera: DroneCameraMode | null = null;
   private signalSystem: SignalSystem3D | null = null;
+  private streamingManager: WorldStreamingManager | null = null;
 
   private cameraModes: ActiveCameraModeId[] = ["free", "cab", "passenger", "follow", "railfan", "drone"];
   private currentModeIndex = 0;
 
   constructor(private readonly ctx: GameContext) {}
 
-  private onRouteSelect = () => {
+  private onRouteSelect = (e?: Event) => {
+    const route = (e as CustomEvent)?.detail?.route ?? defaultTrackPath.getActiveRoute();
+    const isLocalDadar = route.routeId === "central-local-parel-sion";
+    const staticDadarWorld = this.ctx.world.scene.getObjectByName("world");
+    if (staticDadarWorld) {
+      staticDadarWorld.visible = isLocalDadar;
+    }
+
+    if (this.streamingManager) {
+      this.streamingManager.setPath(defaultTrackPath, this.ctx.world.getMaterials());
+    }
     if (this.signalSystem) {
       this.ctx.world.scene.remove(this.signalSystem.group);
       this.signalSystem.dispose();
@@ -118,8 +130,8 @@ export class ExploreScene implements GameScene {
     const key = e.key.toLowerCase();
     const code = e.code;
 
-    // Camera Mode Switching
-    if (code === "KeyV") {
+    // Camera Mode Switching (V or C key)
+    if (code === "KeyV" || code === "KeyC") {
       e.preventDefault();
       this.cycleCamera();
       return;
@@ -233,6 +245,10 @@ export class ExploreScene implements GameScene {
     this.signalSystem = new SignalSystem3D(defaultTrackPath);
     this.ctx.world.scene.add(this.signalSystem.group);
 
+    // 8. World Streaming & Passenger Crowd Manager
+    this.streamingManager = new WorldStreamingManager(defaultTrackPath, this.ctx.world.getMaterials());
+    this.ctx.world.scene.add(this.streamingManager.root);
+
     // Event listeners
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("mls:train:doors", this.onDoors);
@@ -286,13 +302,22 @@ export class ExploreScene implements GameScene {
     defaultTrackPath.updateSignalAspects(trainDist + 124, trainDist - 124);
     this.signalSystem?.updateAspects();
 
-    // 3. Update 3D train position, coach articulation, and bogies
+    // 3. Update spatial streaming and passenger crowd simulation
+    const tel = defaultTrackPath.getUpcomingStation(trainDist, pState.reverser >= 0);
+    this.streamingManager?.update(
+      trainDist,
+      dt,
+      pState.doorsOpen,
+      Boolean(tel?.isAligned)
+    );
+
+    // 4. Update 3D train position, coach articulation, and bogies
     const rake = this.ctx.world.scene.getObjectByName("mumbai-emu-rake");
     if (rake?.userData?.update) {
       rake.userData.update(dt, pState.speed, pState.distance, defaultTrackPath);
     }
 
-    // 4. Update authentic traction and wheel rolling audio
+    // 5. Update authentic traction and wheel rolling audio
     this.ctx.audio.updateTrainSound(pState.speedKmh, pState.motorLoad);
   }
 
@@ -312,6 +337,12 @@ export class ExploreScene implements GameScene {
     window.removeEventListener("mls:train:cameramode", this.onCameraModeChange);
     window.removeEventListener("mls:route:select", this.onRouteSelect);
     window.removeEventListener("mls:station:jump", this.onStationJump);
+
+    if (this.streamingManager) {
+      this.ctx.world.scene.remove(this.streamingManager.root);
+      this.streamingManager.dispose();
+      this.streamingManager = null;
+    }
 
     if (this.signalSystem) {
       this.ctx.world.scene.remove(this.signalSystem.group);

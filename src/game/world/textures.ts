@@ -87,18 +87,29 @@ function trackbed(rng: Rng): HTMLCanvasElement {
   return c;
 }
 
-/** 10 m tile of dusty earth with dry grass. */
+/** 75 m seamless organic ground tile of weathered Mumbai soil, dust and vegetation. */
 function ground(rng: Rng): HTMLCanvasElement {
   const size = 512;
   const [c, ctx] = makeCanvas(size);
-  ctx.fillStyle = "#8f7b5e";
+  // Base warm loam soil
+  ctx.fillStyle = "#65594b";
   ctx.fillRect(0, 0, size, size);
-  for (let i = 0; i < 45; i++) {
-    blob(ctx, rng() * size, rng() * size, range(rng, 30, 100), pick(rng, ["#6f7840", "#7d7a45", "#5f6b38"]), range(rng, 0.35, 0.6));
+
+  // Broad soft earthen gradients
+  for (let i = 0; i < 25; i++) {
+    blob(ctx, rng() * size, rng() * size, range(rng, 60, 160), "#4e4337", 0.4);
   }
-  for (let i = 0; i < 20; i++) blob(ctx, rng() * size, rng() * size, range(rng, 20, 60), "#5d4b37", 0.3);
-  speckle(ctx, rng, 7000, size, ["#a08a6a", "#6e5d48", "#7a6a50", "#b29c7a"], 1, 2.5, 0.7);
-  speckle(ctx, rng, 160, size, ["#c74b3b", "#3a74b8", "#e8e2d5", "#3f8f5a"], 1.5, 3, 0.6);
+  for (let i = 0; i < 25; i++) {
+    blob(ctx, rng() * size, rng() * size, range(rng, 50, 140), "#736758", 0.35);
+  }
+  // Soft patches of coastal monsoon grass
+  for (let i = 0; i < 35; i++) {
+    blob(ctx, rng() * size, rng() * size, range(rng, 40, 120), pick(rng, ["#505a2f", "#5b6636", "#455027"]), 0.28);
+  }
+  // Fine weathered dust and ballast blend
+  for (let i = 0; i < 15; i++) {
+    blob(ctx, rng() * size, rng() * size, range(rng, 20, 70), "#383129", 0.25);
+  }
   return c;
 }
 

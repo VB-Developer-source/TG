@@ -26,10 +26,10 @@ export interface CameraMode {
 }
 
 export class CameraSystem {
-  readonly camera = new THREE.PerspectiveCamera(55, 1, 0.1, 600);
+  readonly camera = new THREE.PerspectiveCamera(55, 1, 0.1, 4000);
   readonly limits: CameraLimits = {
-    min: new THREE.Vector3(-150, 1.2, -250),
-    max: new THREE.Vector3(150, 80, 250),
+    min: new THREE.Vector3(-100000, 0.5, -100000),
+    max: new THREE.Vector3(100000, 600, 100000),
   };
 
   private readonly modes = new Map<string, CameraMode>();

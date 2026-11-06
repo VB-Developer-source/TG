@@ -3,7 +3,7 @@
  * Indian broad gauge (1676 mm). Every world builder reads from here so later
  * sections (trains, routes, signals) can align to the same geometry.
  */
-export const TRACK_LENGTH = 520;
+export const TRACK_LENGTH = 2800;
 export const TRACK_HALF = TRACK_LENGTH / 2;
 /** Track centre lines, west to east. Tracks 2 and 3 serve the island platform. */
 export const TRACK_X = [-10.5, -6, 6, 10.5] as const;
